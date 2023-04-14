@@ -1,1 +1,118 @@
-<p>dashboard works!</p>
+<section class="h-screen bg-gray-50 flex flex-col items-center justify-between">
+    <div class="flex justify-around w-full font-bold text-5xl pb-[80px]">
+        <p class="">Wall of Fame</p>
+        <button
+  type="button"
+  class="font-bold text-5xl inline-block rounded bg-yellow-300 px-6 pb-2 pt-2.5 uppercase leading-normal text-neutral-800 shadow-[0_4px_9px_-4px_#cbcbcb] transition duration-150 ease-in-out hover:bg-yellow-400 hover:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:bg-yellow-400 focus:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:outline-none focus:ring-0 active:bg-yellow-500 active:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)]">
+  Team Portfolio
+</button>
+    </div>
+    <div class="flex flex-col border-black border-double border-[10px]">
+        <!-- ROW 1 -->
+        <div class="flex">
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/datacenter.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/tax.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400 ">
+                <img class="w-full h-full" src="/assets/treasure.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/fashion.jpg" alt="">
+            </div>
+            <div class="cell bg-white">
+                <img class="w-full h-full p-2" src="/assets/blackhole.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/restaurant.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/health.avif" alt="">
+            </div>
+        </div>
+
+        <!-- ROW 2 -->
+        <div class="flex">
+            <div class="cell bg-white">
+                <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
+            </div>
+            <div class="grow border-black border-x-2 border-t-2"></div>
+            <div class="cell bg-lime-400">
+                <img class="w-full h-full" src="/assets/housing.jpg" alt="">
+            </div>
+        </div>
+
+        <!-- ROW 3 -->
+        <div class="flex">
+            <div class="cell bg-slate-400">
+                <img src="/assets/restaurant.jpg" alt="">
+            </div>
+            <div class="grow border-black border-x-2">
+                <a href="#" class="flex items-center justify-center h-full text-4xl font-semibold text-gray-900">
+                    <img class="w-8 h-8 mr-2" src="/assets/dice.jpg" alt="logo">
+                    Techopoly    
+                </a>
+            </div>
+            <div class="cell bg-lime-400">
+                <img class="w-full h-full" src="/assets/treasure.jpg" alt="">
+            </div>
+        </div>
+
+        <!-- ROW 4 -->
+        <div class="flex">
+            <div class="cell bg-slate-400">
+                <img class="w-full h-full" src="/assets/grocery.jpg" alt="">
+            </div>
+            <div class="grow border-black border-x-2 border-b-2 flex justify-center">
+                <div class="dice" [ngStyle]="style">
+                    <div class="face front"></div>
+                    <div class="face back"></div>
+                    <div class="face top"></div>
+                    <div class="face bottom"></div>
+                    <div class="face right"></div>
+                    <div class="face left"></div>
+                </div>
+            </div>
+            <div class="cell bg-lime-400">
+                <img class="w-full h-full" src="/assets/fashion.jpg" alt="">
+            </div>
+        </div>
+
+        <!-- ROW 5 -->
+        <div class="flex">
+            <div class="cell bg-yellow-400">
+                <img src="/assets/start.png" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/theater.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/electronics.jpg" alt="">
+            </div>
+            <div class="cell bg-white">
+                <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/office.avif" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/meditation.avif" alt="">
+            </div>
+            <div class="cell bg-yellow-400">
+                <img class="w-full h-full" src="/assets/jail.webp" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-around w-full font-bold text-5xl pt-[80px] mb-2">
+        <p class="">Live Transaction</p>
+        <div>
+            <div class="text-lg font-normal">Waiting Time: <span class="font-bold">{{waitCount}}</span></div>
+            <button id="btnDice" class="roll text-4xl" (click)="randomDice()" [disabled]="isDisabled">
+                Roll Dice:
+                <span>{{result}}</span>
+            </button>
+        </div>
+    </div>
+</section>
