@@ -1,0 +1,24 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "team_id": "admin",
+      "password": "admin"
+    },
+    {
+      "id": 2,
+      "team_id": "hello",
+      "password": "world"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
