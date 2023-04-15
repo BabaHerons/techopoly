@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,11 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
+  constructor(private router:Router, private tostr:ToastrService) {}
+
   waitCount: number = 0;
   interval: any;
   isDisabled = false;
   style: any = {};
   result: number = 0;
+  outcome:any;
+  list = ['','','','','','','','','','','','','','','','','','','','',]
+  team_id = sessionStorage.getItem('team_id')
 
   startTimer() {
     let btnDice = document.getElementById('btnDice')
@@ -44,6 +51,8 @@ export class DashboardComponent {
         this.rollDice(this.randomIntFromInterval(1, 6))
       } else {
         clearInterval(rollInterval);
+        this.outcome = this.result
+        this.team_current_position()
       }
     }, 1000)
 
@@ -97,4 +106,27 @@ export class DashboardComponent {
       console.log(this.result);
     }, 100);
   };
+
+  team_position = '<div class="absolute inline-block mt-[68px] mx-[34px]"><img class="inline-block object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/2955305/pexels-photo-2955305.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Profile image"/><span class="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-600 border-2 border-white rounded-full"></span></div>'
+  team_current_position = () => {
+    for (let i=1; i<20; i++){
+      if (i === this.outcome){
+        this.list[i] = this.team_position
+      }
+      else {
+        this.list[i] = ''
+      }
+    }
+  }
+
+  toggle_portfolio = () => {
+    let modal = document.getElementById('portfolio')
+    modal?.classList.toggle('hidden')
+  }
+
+  sign_out = () => {
+    sessionStorage.removeItem('team_id')
+    this.router.navigate([''])
+    this.tostr.success('Sign Out successful')
+  }
 }
