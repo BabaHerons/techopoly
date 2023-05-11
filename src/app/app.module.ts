@@ -11,13 +11,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TeamDpComponent } from './team-dp/team-dp.component';
+import { LoginComponent } from './admin/login/login.component';
+import { LeaderboardComponent } from './admin/leaderboard/leaderboard.component';
+import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     DashboardComponent,
-    TeamDpComponent
+    TeamDpComponent,
+    LoginComponent,
+    LeaderboardComponent,
+    AdminHomeComponent
   ],
   imports: [
     BrowserModule,

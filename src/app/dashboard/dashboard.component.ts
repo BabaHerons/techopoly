@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../service/api/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +9,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
-  constructor(private router:Router, private tostr:ToastrService) {}
+  constructor(private router:Router, private tostr:ToastrService, private api:ApiService) {}
+
+  ngOnInit(){
+    this.list[0] = this.team_position
+    // this.api.teams_all().subscribe(res => {
+    //   console.log(res)
+    // })
+  }
 
   waitCount: number = 0;
   interval: any;
@@ -109,6 +117,7 @@ export class DashboardComponent {
 
   team_position = '<div class="absolute inline-block mt-[68px] mx-[34px]"><img class="inline-block object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/2955305/pexels-photo-2955305.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Profile image"/><span class="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-600 border-2 border-white rounded-full"></span></div>'
   team_current_position = () => {
+    this.list[0]=''
     for (let i=1; i<20; i++){
       if (i === this.outcome){
         this.list[i] = this.team_position

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ApiService } from '../service/api/api.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  constructor(private t: Title, private tstr:ToastrService, private http:HttpClient, private router:Router) {}
+  constructor(private t: Title, private tstr:ToastrService, private api:ApiService, private router:Router) {}
   ngOnInit() {
     this.t.setTitle('Home | Techopoly');
   }
@@ -30,11 +30,12 @@ export class HomeComponent {
     }
     else {
       let k:any = []
-      this.http.get(`http://localhost:3000/teams?team_id=${this.login_form.value.team_id}`).subscribe(
+      // this.http.get(`http://localhost:3000/teams?team_id=${this.login_form.value.team_id}`)
+      this.api.teams_id_get(this.login_form.value.team_id).subscribe(
         res => {
         k = res
-        if(k.length>0 && this.login_form.value.password === k[0].password){
-          sessionStorage.setItem('team_id', k[0].team_id)
+        if(k && this.login_form.value.password === k.password){
+          sessionStorage.setItem('team_id', k.team_id)
           this.tstr.success('Login Successful')
           this.router.navigate(['dashboard'])
         }
