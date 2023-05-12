@@ -13,9 +13,123 @@ export class DashboardComponent {
 
   ngOnInit(){
     this.list[0] = this.team_position
-    // this.api.teams_all().subscribe(res => {
-    //   console.log(res)
-    // })
+    this.live_transaction = []
+    this.api.transactions_all_get().subscribe(res => {
+      let k:any = []
+      k = res
+      this.live_transaction = k[k.length-1]
+      console.log(this.live_transaction)
+    })
+
+    this.my_details = {
+      team_id: sessionStorage.getItem('team_id'),
+      name: '',
+      assets: '',
+      cash: '',
+      net_worth: '',
+      recent_transaction: {
+        gain:'',
+        amount:'',
+        assets:''
+      },
+      profile_pic: ''
+    }
+    
+    // GETTING TEAM PROFILE PICTURE
+    this.api.teams_profile_pic_team_id_get(this.my_details.team_id).subscribe((res: Blob) => {
+      let objectURL = URL.createObjectURL(res);       
+      this.my_details.profile_pic = objectURL
+    })
+
+    // GETTING TEAM NAME
+    this.api.teams_id_get(this.my_details.team_id).subscribe(res => {
+      k = res
+      this.my_details.name = k.name
+    })
+
+    // GETTING TEAM ASSETS, CASH, NET_WORTH
+    let k:any = {}
+    this.api.status_id_get(this.my_details.team_id).subscribe(res => {
+      k = res
+      this.my_details.assets = k.assets
+      this.my_details.cash = k.cash
+      this.my_details.net_worth = k.net_worth
+    })
+
+    // GETTING TEAM LATEST TRANSACTION
+    this.api.transactions_team_id_get(this.my_details.team_id).subscribe(res => {
+      k = res
+      this.my_details.recent_transaction = k[k.length-1]
+    })
+
+    // GETTING TEAM STATUS
+    this.team_status = []
+    this.api.status_all_get().subscribe(res => {
+      k = res
+      this.team_status = k
+    
+      this.team_status_dp = []
+      for (let team of this.team_status){
+        if (team.team_id != 'admin'){
+          if (team.team_id != 'NONE'){
+            this.api.teams_profile_pic_team_id_get(team.team_id).subscribe((res: Blob) => {
+              let objectURL = URL.createObjectURL(res);       
+              this.team_status_dp.push({
+                id:team.team_id,
+                dp:objectURL
+              })
+            })
+          }
+        }
+      }
+    })
+
+    setTimeout(()=>{
+      for (let team of this.team_status){
+        for (let team_dp of this.team_status_dp){
+          if (team.team_id != 'admin'){
+            if (team.team_id != 'NONE'){
+              if (team_dp.id === team.team_id){
+                this.wall_of_fame.push(team_dp.dp)
+              }
+            }
+          }
+        }
+      }
+    },1000)
+
+
+    setInterval(() => {
+      this.team_status = []
+      this.wall_of_fame = []
+      this.api.status_all_get().subscribe(res => {
+        k = res
+        this.team_status = k
+      
+        for (let team of this.team_status){
+          for (let team_dp of this.team_status_dp){
+            if (team.team_id != 'admin'){
+              if (team.team_id != 'NONE'){
+                if (team_dp.id === team.team_id){
+                  this.wall_of_fame.push(team_dp.dp)
+                }
+              }
+            }
+          }
+        }
+        // console.log(this.team_status_dp)
+        // console.log(this.team_status)
+      })
+
+      let k:any = []
+      this.live_transaction = []
+      this.api.transactions_all_get().subscribe(res => {
+        k = res
+        this.live_transaction = k[k.length-1]
+        console.log(this.live_transaction)
+    })
+    },10000)
+    
   }
 
   waitCount: number = 0;
@@ -132,6 +246,25 @@ export class DashboardComponent {
     let modal = document.getElementById('portfolio')
     modal?.classList.toggle('hidden')
   }
+
+  my_details = {
+    team_id: sessionStorage.getItem('team_id'),
+    assets: '',
+    cash: '',
+    net_worth: '',
+    recent_transaction: {
+      gain:'',
+      amount:'',
+      assets:''
+    },
+    profile_pic: '',
+    name:''
+  }
+
+  team_status:any = []
+  team_status_dp:any = []
+  wall_of_fame:any = []
+  live_transaction:any = {}
 
   sign_out = () => {
     sessionStorage.removeItem('team_id')

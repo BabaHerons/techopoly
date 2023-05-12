@@ -44,6 +44,9 @@ export class ApiService {
   players_team_id_add(team_id:any, data:any){
     return this.http.post(this.base_url + `/players/${team_id}`, data, {'headers':this.headers})
   }
+  players_team_id_edit_put(team_id:any, id:any, data:any){
+    return this.http.put(this.base_url + `/players/${team_id}/${id}`, data, {'headers':this.headers})
+  }
 
   // TEAM STATUS
   status_all_get(){
@@ -51,6 +54,14 @@ export class ApiService {
   }
   status_id_get(team_id:any){
     return this.http.get(this.base_url + `/status/${team_id}`)
+  }
+
+  // TRANSACTIONS
+  transactions_team_id_get(team_id:any){
+    return this.http.get(this.base_url + `/transactions/${team_id}`)
+  }
+  transactions_all_get(){
+    return this.http.get(this.base_url + '/transactions')
   }
   
 

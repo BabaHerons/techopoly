@@ -27,7 +27,6 @@ export class AdminHomeComponent {
       this.teams_all = res
       // console.log(this.teams_all)
 
-      // API CALL FOR GETTING ALL PROFILE PICS
       for (let team of this.teams_all){
         if (team.team_id != 'admin'){
           if (team.team_id != 'NONE'){
@@ -295,35 +294,79 @@ export class AdminHomeComponent {
     player_four_email: new FormControl(''),
   })
 
-  current_team_id = ''
+  selected_team_id = ''
+  selected_players:any = []
   get_team_details(team_id:any){
-    this.current_team_id = team_id
+    this.edit_team_details_form.reset()
+    this.selected_players = []
+    
+    this.selected_team_id = team_id
+    
     for (let team of this.teams){
       if (team.team_id == team_id){
         this.edit_team_details_form.patchValue({
           team_id: team.team_id,
           password: team.team_password,
           team_name: team.team_name,
-          // profile_pic: 'okay',
-          // player_one_name: 'okay',
-          // player_one_email: 'okay',
-          // player_two_name: 'okay',
-          // player_two_email: 'okay',
-          // player_three_name: 'okay',
-          // player_three_email: 'okay',
-          // player_four_name: 'okay',
-          // player_four_email: 'okay'
         })
+
+        if (team.players.length == 1){
+          this.selected_players.push(team.players[0].id)
+          this.edit_team_details_form.patchValue({
+            player_one_name: team.players[0].name,
+            player_one_email:team.players[0].email
+          })
+        }
+        else if (team.players.length == 2){
+          this.selected_players.push(team.players[0].id)
+          this.selected_players.push(team.players[1].id)
+          this.edit_team_details_form.patchValue({
+            player_one_name: team.players[0].name,
+            player_one_email:team.players[0].email,
+            player_two_name: team.players[1].name,
+            player_two_email:team.players[1].email
+          })
+        }
+        else if (team.players.length == 3){
+          this.selected_players.push(team.players[0].id)
+          this.selected_players.push(team.players[1].id)
+          this.selected_players.push(team.players[2].id)
+          this.edit_team_details_form.patchValue({
+            player_one_name: team.players[0].name,
+            player_one_email:team.players[0].email,
+            player_two_name: team.players[1].name,
+            player_two_email:team.players[1].email,
+            player_three_name: team.players[2].name,
+            player_three_email:team.players[2].email
+          })
+        }
+        else if (team.players.length == 4){
+          this.selected_players.push(team.players[0].id)
+          this.selected_players.push(team.players[1].id)
+          this.selected_players.push(team.players[2].id)
+          this.selected_players.push(team.players[3].id)
+          this.edit_team_details_form.patchValue({
+            player_one_name: team.players[0].name,
+            player_one_email:team.players[0].email,
+            player_two_name: team.players[1].name,
+            player_two_email:team.players[1].email,
+            player_three_name: team.players[2].name,
+            player_three_email:team.players[2].email,
+            player_four_name: team.players[3].name,
+            player_four_email:team.players[3].email
+          })
+        }
       }
     }
   }
 
   update_details(){
-    let team_id = this.current_team_id
+    let team_id = this.selected_team_id
     let data = {
       team_id: team_id,
       name: this.edit_team_details_form.value.team_name,
       password: this.edit_team_details_form.value.password,
+      id:this.selected_players
     };
     let k:any = {}
     this.api.teams_edit_put(team_id, data).subscribe(res => {
@@ -337,6 +380,104 @@ export class AdminHomeComponent {
         this.api.teams_profile_pic_post(data.team_id, this.formData).subscribe(
           (res) => {
             
+          },
+          (error) => {
+            console.log('error', error);
+            this.tostr.error(error.statusText, 'Server Error');
+          }
+        );
+      }
+
+      // FOLLOWING CODE IS FOR PLAYERS ONE DETAILS
+      if (
+        this.edit_team_details_form.value.player_one_name &&
+        this.edit_team_details_form.value.player_one_email
+      ) {
+        console.log('hello one');
+        let player_one_data = {
+          name: this.edit_team_details_form.value.player_one_name,
+          email: this.edit_team_details_form.value.player_one_email,
+        };
+        this.api.players_team_id_edit_put(data.team_id, data.id[0], player_one_data).subscribe(
+          (res) => {
+            k = res;
+            console.log(res)
+            console.log(data.id[0])
+            if (k.message.includes('Player Updated')) {
+              this.tostr.success('Player 1 Updated');
+            }
+          },
+          (error) => {
+            console.log('error', error);
+            this.tostr.error(error.statusText, 'Server Error');
+          }
+        );
+      }
+
+      // FOLLOWING CODE IS FOR PLAYERS TWO DETAILS
+      if (
+        this.edit_team_details_form.value.player_two_name &&
+        this.edit_team_details_form.value.player_two_email
+      ) {
+        console.log('hello two');
+        let player_two_data = {
+          name: this.edit_team_details_form.value.player_two_name,
+          email: this.edit_team_details_form.value.player_two_email,
+        };
+        this.api.players_team_id_edit_put(data.team_id, data.id[1], player_two_data).subscribe(
+          (res) => {
+            k = res;
+            if (k.message.includes('Player Updated')) {
+              this.tostr.success('Player 2 Updated');
+            }
+          },
+          (error) => {
+            console.log('error', error);
+            this.tostr.error(error.statusText, 'Server Error');
+          }
+        );
+      }
+
+      // FOLLOWING CODE IS FOR PLAYERS THREE DETAILS
+      if (
+        this.edit_team_details_form.value.player_three_name &&
+        this.edit_team_details_form.value.player_three_email
+      ) {
+        console.log('hello three');
+        let player_three_data = {
+          name: this.edit_team_details_form.value.player_three_name,
+          email: this.edit_team_details_form.value.player_three_email,
+        };
+        this.api.players_team_id_edit_put(data.team_id, data.id[2], player_three_data).subscribe(
+          (res) => {
+            k = res;
+            if (k.message.includes('Player Updated')) {
+              this.tostr.success('Player 3 Updated');
+            }
+          },
+          (error) => {
+            console.log('error', error);
+            this.tostr.error(error.statusText, 'Server Error');
+          }
+        );
+      }
+
+      // FOLLOWING CODE IS FOR PLAYERS FOUR DETAILS
+      if (
+        this.edit_team_details_form.value.player_four_name &&
+        this.edit_team_details_form.value.player_four_email
+      ) {
+        console.log('hello four');
+        let player_four_data = {
+          name: this.edit_team_details_form.value.player_four_name,
+          email: this.edit_team_details_form.value.player_four_email,
+        };
+        this.api.players_team_id_edit_put(data.team_id, data.id[3], player_four_data).subscribe(
+          (res) => {
+            k = res;
+            if (k.message.includes('Player Updated')) {
+              this.tostr.success('Player 4 Updated');
+            }
           },
           (error) => {
             console.log('error', error);
