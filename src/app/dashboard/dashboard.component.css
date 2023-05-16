@@ -1,6 +1,24 @@
 .cell {
     @apply
-    w-[120px] h-[120px] border-black border-[2px]
+    w-[50px] h-[50px] 
+    border-black border-[1px]
+}
+
+.middle-empty-cell {
+    @apply
+    grow border-black border-x-2
+}
+
+.neon {
+    box-shadow: 0 0 .2rem #fff,
+            0 0 .2rem #fff,
+            0 0 1rem #bc13fe,
+            0 0 0.8rem #bc13fe,
+            0 0 1.8rem #bc13fe,
+            inset 0 0 1.3rem #bc13fe;
+    @apply
+    absolute inline-block bg-transparent w-[50px] h-[50px]
+    /* border-green-600 border-[5px] */
 }
 
 /*

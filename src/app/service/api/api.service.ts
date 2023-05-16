@@ -55,13 +55,27 @@ export class ApiService {
   status_id_get(team_id:any){
     return this.http.get(this.base_url + `/status/${team_id}`)
   }
+  status_id_position_update_put(team_id:any, data:any){
+    return this.http.put(this.base_url + `/status/${team_id}`, data, {'headers':this.headers})
+  }
 
   // TRANSACTIONS
   transactions_team_id_get(team_id:any){
     return this.http.get(this.base_url + `/transactions/${team_id}`)
   }
+  transactions_team_id_post(team_id:any, data:any){
+    return this.http.post(this.base_url + `/transactions/${team_id}`, data)
+  }
   transactions_all_get(){
     return this.http.get(this.base_url + '/transactions')
+  }
+
+  // ASSETS
+  assets_box_id_get(box_id:any){
+    return this.http.get(this.base_url + `/assets/${box_id}`)
+  }
+  assets_team_id_get(team_id:any){
+    return this.http.get(this.base_url + `/assets/team/${team_id}`)
   }
   
 

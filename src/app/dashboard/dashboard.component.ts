@@ -12,27 +12,43 @@ export class DashboardComponent {
   constructor(private router:Router, private tostr:ToastrService, private api:ApiService) {}
 
   ngOnInit(){
-    this.list[0] = this.team_position
+    // this.list[0] = this.team_position
     this.live_transaction = []
-    this.api.transactions_all_get().subscribe(res => {
-      let k:any = []
+    this.getting_live_transaction()
+    
+    this.api.teams_all().subscribe(res => {
+      let k:any = {}
       k = res
-      this.live_transaction = k[k.length-1]
-      console.log(this.live_transaction)
+      this.total_team = k.length
     })
+
+    // FOR GETTING TEAM POSITION AND SETTING TEAM CURRENT POSITION
+    this.api.status_id_get(this.my_details.team_id).subscribe(res => {
+      let k:any = {}
+      k = res
+      this.team_current_position_value = Math.floor(k.position) % 52
+      console.log(this.team_current_position_value)
+      
+      // FOR SETTING TEAM CURRENT POSITION
+      this.team_current_position()
+    })
+
 
     this.my_details = {
       team_id: sessionStorage.getItem('team_id'),
       name: '',
-      assets: '',
+      assets: [],
       cash: '',
-      net_worth: '',
+      net_worth: 0,
       recent_transaction: {
         gain:'',
         amount:'',
-        assets:''
+        assets:'',
+        message:''
       },
-      profile_pic: ''
+      profile_pic: '',
+      recent_asset: '',
+      active:''
     }
     
     // GETTING TEAM PROFILE PICTURE
@@ -47,26 +63,47 @@ export class DashboardComponent {
       this.my_details.name = k.name
     })
 
-    // GETTING TEAM ASSETS, CASH, NET_WORTH
+    // GETTING TEAM CASH, NET_WORTH, STATUS
     let k:any = {}
     this.api.status_id_get(this.my_details.team_id).subscribe(res => {
       k = res
-      this.my_details.assets = k.assets
       this.my_details.cash = k.cash
-      this.my_details.net_worth = k.net_worth
+      this.my_details.net_worth = Number(k.net_worth)
+      this.my_details.active = k.active
+
+      // DISABLING THE ROLL DICE BUTTON
+      if (this.my_details.active === 'false'){
+        let btnDice = document.getElementById('btnDice')
+        this.isDisabled = true
+        btnDice?.classList.toggle('roll')
+        btnDice?.classList.toggle('roll-disabled')
+      }
+    })
+
+    // GETTING ASSETS OF THE TEAM
+    this.api.assets_team_id_get(this.my_details.team_id).subscribe(res => {
+      k = res
+      this.my_details.assets = k
     })
 
     // GETTING TEAM LATEST TRANSACTION
     this.api.transactions_team_id_get(this.my_details.team_id).subscribe(res => {
       k = res
       this.my_details.recent_transaction = k[k.length-1]
+      if(this.my_details.recent_transaction.assets != 'NONE'){
+        this.api.assets_box_id_get(this.my_details.recent_transaction.assets).subscribe(res => {
+          k = res
+          this.my_details.recent_asset = k.name
+        })
+      }
     })
 
-    // GETTING TEAM STATUS
+    // GETTING All TEAM STATUS
     this.team_status = []
     this.api.status_all_get().subscribe(res => {
       k = res
       this.team_status = k
+      // console.log(this.team_status)
     
       this.team_status_dp = []
       for (let team of this.team_status){
@@ -91,44 +128,51 @@ export class DashboardComponent {
             if (team.team_id != 'NONE'){
               if (team_dp.id === team.team_id){
                 this.wall_of_fame.push(team_dp.dp)
-              }
-            }
-          }
-        }
-      }
-    },1000)
-
-
-    setInterval(() => {
-      this.team_status = []
-      this.wall_of_fame = []
-      this.api.status_all_get().subscribe(res => {
-        k = res
-        this.team_status = k
-      
-        for (let team of this.team_status){
-          for (let team_dp of this.team_status_dp){
-            if (team.team_id != 'admin'){
-              if (team.team_id != 'NONE'){
-                if (team_dp.id === team.team_id){
-                  this.wall_of_fame.push(team_dp.dp)
+                if (this.wall_of_fame.length == 10){
+                  break;
                 }
               }
             }
           }
         }
-        // console.log(this.team_status_dp)
-        // console.log(this.team_status)
-      })
+        if (this.wall_of_fame.length == 10){
+          break;
+        }
+      }
+    },1000)
 
-      let k:any = []
-      this.live_transaction = []
-      this.api.transactions_all_get().subscribe(res => {
-        k = res
-        this.live_transaction = k[k.length-1]
-        console.log(this.live_transaction)
-    })
-    },10000)
+
+    // setInterval(() => {
+    //   this.team_status = []
+    //   this.wall_of_fame = []
+    //   this.api.status_all_get().subscribe(res => {
+    //     k = res
+    //     this.team_status = k
+      
+    //     for (let team of this.team_status){
+    //       for (let team_dp of this.team_status_dp){
+    //         if (team.team_id != 'admin'){
+    //           if (team.team_id != 'NONE'){
+    //             if (team_dp.id === team.team_id){
+    //               this.wall_of_fame.push(team_dp.dp)
+    //               if (this.wall_of_fame.length == 10){
+    //                 break;
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //       if (this.wall_of_fame.length == 10){
+    //         break;
+    //       }
+    //     }
+    //     // console.log(this.team_status_dp)
+    //     // console.log(this.team_status)
+    //   })
+
+      // this.live_transaction = []
+      // this.getting_live_transaction()
+    // },10000)
     
   }
 
@@ -136,10 +180,16 @@ export class DashboardComponent {
   interval: any;
   isDisabled = false;
   style: any = {};
+  style2: any = {};
   result: number = 0;
+  result2: number = 0;
   outcome:any;
-  list = ['','','','','','','','','','','','','','','','','','','','',]
+  // list = ['','','','','','','','','','','','','','','','','','','','',]
+  list = new Array(52)
+  team_current_position_value: number = 0
   team_id = sessionStorage.getItem('team_id')
+  total_team:number = 0
+  current_box:any = {}
 
   startTimer() {
     let btnDice = document.getElementById('btnDice')
@@ -171,10 +221,13 @@ export class DashboardComponent {
       if (rollCount > 0) {
         rollCount--;
         this.rollDice(this.randomIntFromInterval(1, 6))
+        this.rollDice2(this.randomIntFromInterval(1, 6))
       } else {
         clearInterval(rollInterval);
-        this.outcome = this.result
-        this.team_current_position()
+        this.outcome = this.result + this.result2
+        // this.team_current_position()
+        this.api_calls()
+        this.ngOnInit()
       }
     }, 1000)
 
@@ -225,21 +278,189 @@ export class DashboardComponent {
       }
 
       this.style.animation = 'none';
-      console.log(this.result);
+      // console.log(this.result);
     }, 100);
   };
 
-  team_position = '<div class="absolute inline-block mt-[68px] mx-[34px]"><img class="inline-block object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/2955305/pexels-photo-2955305.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Profile image"/><span class="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-600 border-2 border-white rounded-full"></span></div>'
+  rollDice2 = (random: any) => {
+    this.style2.animation = 'rolling 1s';
+
+    setTimeout(() => {
+      switch (random) {
+        case 1:
+          this.style2.transform = 'rotateX(0deg) rotateY(0deg)';
+          this.result2 = 1;
+          break;
+
+        case 6:
+          this.style2.transform = 'rotateX(180deg) rotateY(0deg)';
+          this.result2 = 6;
+          break;
+
+        case 2:
+          this.style2.transform = 'rotateX(-90deg) rotateY(0deg)';
+          this.result2 = 2;
+          break;
+
+        case 5:
+          this.style2.transform = 'rotateX(90deg) rotateY(0deg)';
+          this.result2 = 5;
+          break;
+
+        case 3:
+          this.style2.transform = 'rotateX(0deg) rotateY(90deg)';
+          this.result2 = 3;
+          break;
+
+        case 4:
+          this.style2.transform = 'rotateX(0deg) rotateY(-90deg)';
+          this.result2 = 4;
+          break;
+
+        default:
+          break;
+      }
+
+      this.style2.animation = 'none';
+      // console.log(this.result);
+    }, 100);
+  };
+
+  team_position = '<div class = "relative"><div class="absolute inset-0.5 bg-pink-600 blur rounded-full opacity-75 w-[50px] h-[50px]"></div></div>'
   team_current_position = () => {
     this.list[0]=''
-    for (let i=1; i<20; i++){
-      if (i === this.outcome){
+    for (let i=0; i<52; i++){
+      if (i === this.team_current_position_value){
         this.list[i] = this.team_position
       }
       else {
         this.list[i] = ''
       }
     }
+  }
+
+  api_calls(){
+    let k:any = {}
+
+    // FOR SETTING NEW TEAM POSITION AND GETTING THE UPDATED DETAILS
+    this.api.status_id_position_update_put(this.my_details.team_id, {"position":this.outcome}).subscribe(res => {
+      k = res
+      this.team_current_position_value = k.position % 52
+      this.team_current_position()
+
+      // GETTING ASSETS DETAILS BASED ON POSITON ON THE BOARD
+      this.api.assets_box_id_get(this.team_current_position_value).subscribe(res => {
+        let m:any = {}
+        m = res
+        this.current_box = m
+
+        // CHECKING IF THE CURRENT BOX BELONGS TO A PROPERTY OR NOT
+        if ("message" in m){
+          console.log(m.message)
+        }
+        else {
+          this.toggle_box_modal()
+          if(this.current_box.current_owner != this.my_details.team_id && this.current_box.current_owner != 'admin'){
+            // alert('You will pay rent')
+            // DEDUCTING RENT AMOUNT FROM THE CURRENT TEAM
+            let data = {
+              "assets":"NONE",
+              "gain":"false",
+              "loss":"true",
+              "amount":this.current_box.rent_amount,
+              "message": `Rent paid to ${this.current_box.current_owner}`
+            }
+            let l:any = {}
+            this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+              l = res
+              if (l.amount === this.current_box.rent_amount && l.loss === 'true'){
+                this.tostr.warning(`$${l.amount} has beend deducted from your wallet.`)
+              }
+            })
+
+            // ADDING RENT AMOUNT TO THE RELEVANT TEAM
+            let data_ = {
+              "assets":"NONE",
+              "gain":"true",
+              "loss":"false",
+              "amount":this.current_box.rent_amount,
+              "message": `Rent paid by ${this.my_details.team_id}`
+            }
+            let z:any = {}
+            this.api.transactions_team_id_post(this.current_box.current_owner, data_).subscribe(res => {
+              z = res
+
+            })
+          }
+        }
+      })
+    },
+    error => {
+      console.log('error', error)
+      this.tostr.error(error.statusText, 'Server Error')
+    })
+
+
+  }
+
+  toggle_box_modal(){
+    let box_modal = document.getElementById('box_modal')
+    box_modal?.classList.toggle('hidden')
+
+    this.ngOnInit()
+  }
+
+  purchase_property() {
+    const data_cash = {
+      "amount":this.current_box.value,
+      "gain":'false',
+      "loss":'true',
+      "assets":'NONE',
+      "message":"Deducting cash for purchasing the property"
+    }
+    const data_asset = {
+      "amount":'NONE',
+      "gain":'true',
+      "loss":'false',
+      "assets":this.current_box.box_index,
+      "message": "Property purchased"
+    }
+
+    if (Number(this.my_details.cash) > Number(this.current_box.value)){
+      let k:any = {}
+      this.api.transactions_team_id_post(this.my_details.team_id, data_cash).subscribe(res => {
+        k = res
+        console.log(k)
+        if (k.amount === this.current_box.value && k.gain === 'false'){
+          this.tostr.success("Transaction is successfull")
+        }
+        else {
+          this.tostr.error('Transaction Failed')
+        }
+      })
+
+      let p:any = {}
+      this.api.transactions_team_id_post(this.my_details.team_id, data_asset).subscribe(res => {
+        p = res
+        console.log(p)
+        if (Number(p.assets) === Number(this.current_box.box_index)){
+          this.tostr.success("Property purchased")
+        }
+        else {
+          this.tostr.error("Something went wrong")
+        }
+      })
+    } else {
+      this.tostr.info("You don't have enough cash")
+    }
+
+    this.ngOnInit();
+  }
+
+  sell_property(box_id:any) {
+    let btnDice = document.getElementById('btnDice')
+    btnDice?.classList.toggle('roll')
+    btnDice?.classList.toggle('roll-disabled')
   }
 
   toggle_portfolio = () => {
@@ -249,22 +470,47 @@ export class DashboardComponent {
 
   my_details = {
     team_id: sessionStorage.getItem('team_id'),
-    assets: '',
+    assets: [
+      {
+        name: '',
+        box_index:'',
+        value:''
+      }
+    ],
     cash: '',
-    net_worth: '',
+    net_worth: 0,
     recent_transaction: {
       gain:'',
       amount:'',
-      assets:''
+      assets:'',
+      message:''
     },
     profile_pic: '',
-    name:''
+    name:'',
+    recent_asset:'',
+    active:''
   }
 
   team_status:any = []
   team_status_dp:any = []
   wall_of_fame:any = []
   live_transaction:any = {}
+  live_transaction_asset_name:any = ""
+
+  getting_live_transaction(){
+    // GETTING LIVE TRANSCATION
+    this.api.transactions_all_get().subscribe(res => {
+      let k:any = []
+      k = res
+      this.live_transaction = k[k.length-1]
+      if (this.live_transaction.assets != 'NONE'){
+        this.api.assets_box_id_get(this.live_transaction.assets).subscribe(res => {
+          k = res
+          this.live_transaction_asset_name = k.name
+        })
+      }
+    })
+  }
 
   sign_out = () => {
     sessionStorage.removeItem('team_id')
