@@ -1,1 +1,183 @@
-<p>leaderboard works!</p>
+<section class="bg-gray-50 flex justify-around p-20 flex-col">
+    <h1 class="text-center text-4xl font-bold mb-6">LEADERBOARD</h1>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                <tr>
+                    <th scope="col" class="px-6 py-3 w-[100px]">
+                    </th>
+                    <th scope="col" class="px-6 py-3 w-[10px]">
+                        S.NO.
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Team ID and Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Assets
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Cash
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Net Worth
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!-- FIRST POSITION -->
+                <tr class="bg-white border-b">
+                    <td class="px-6 py-4">
+                        <img class="min-w-[100px]" src="/assets/leaderboard/gold.png" alt="">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <strong>1.</strong>
+                        </div>
+                    </td>
+                    <td scope="row" class="flex items-center mt-4 px-6 py-4 text-gray-900 whitespace-nowrap">
+                        <img class="w-20 h-20 rounded-full" src={{teams[0].profile_pic}}>
+                        <div class="pl-3">
+                            <div class="text-base font-semibold">{{ teams[0].id }}</div>
+                            <div class="font-normal text-gray-500">{{ teams[0].name }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <ul *ngIf="teams[0].assets.length > 0 else msg">
+                            <li *ngFor="let asset of teams[0].assets" class="capitalize mb-2">
+                                {{asset.name}} - ${{asset.value}}
+                            </li>
+                        </ul>
+                        <ng-template #msg>
+                            <ul>
+                                <li>NONE</li>
+                            </ul>
+                        </ng-template>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-semibold">${{ teams[0].cash }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div *ngIf="teams[0].net_worth > 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> ${{teams[0].net_worth}}
+                        </div>
+                        <div *ngIf="teams[0].net_worth <= 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> ${{teams[0].net_worth}}
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- SECOND POSITION -->
+                <tr class="bg-white border-b">
+                    <td class="px-6 py-4">
+                        <img class="min-w-[100px]" src="/assets/leaderboard/silver.png" alt="">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <strong>2.</strong>
+                        </div>
+                    </td>
+                    <td scope="row" class="flex items-center mt-4 px-6 py-4 text-gray-900 whitespace-nowrap">
+                        <img class="w-20 h-20 rounded-full" src={{teams[1].profile_pic}}>
+                        <div class="pl-3">
+                            <div class="text-base font-semibold">{{ teams[1].id }}</div>
+                            <div class="font-normal text-gray-500">{{ teams[1].name }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <ul *ngIf="teams[1].assets.length > 0 else msg">
+                            <li *ngFor="let asset of teams[1].assets" class="capitalize mb-2">
+                                {{asset.name}} - ${{asset.value}}
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-semibold">${{ teams[1].cash }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div *ngIf="teams[0].net_worth > 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> ${{teams[1].net_worth}}
+                        </div>
+                        <div *ngIf="teams[0].net_worth <= 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> ${{teams[1].net_worth}}
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- THIRD POSITION -->
+                <tr class="bg-white border-b">
+                    <td class="px-6 py-4">
+                        <img class="min-w-[100px]" src="/assets/leaderboard/bronze.png" alt="">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <strong>3.</strong>
+                        </div>
+                    </td>
+                    <td scope="row" class="flex items-center mt-4 px-6 py-4 text-gray-900 whitespace-nowrap">
+                        <img class="w-20 h-20 rounded-full" src={{teams[2].profile_pic}}>
+                        <div class="pl-3">
+                            <div class="text-base font-semibold">{{ teams[2].id }}</div>
+                            <div class="font-normal text-gray-500">{{ teams[2].name }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <ul *ngIf="teams[2].assets.length > 0 else msg">
+                            <li *ngFor="let asset of teams[2].assets" class="capitalize mb-2">
+                                {{asset.name}} - ${{asset.value}}
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-semibold">${{ teams[2].cash }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div *ngIf="teams[2].net_worth > 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> ${{teams[2].net_worth}}
+                        </div>
+                        <div *ngIf="teams[2].net_worth <= 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> ${{teams[2].net_worth}}
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!-- ALL POSITION FROM 4TH TO END -->
+                <tr *ngFor="let team of teams.slice(3,teams.length)" class="bg-white border-b">
+                    <td class="px-6 py-4">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <strong>{{ teams.indexOf(team) + 1 }}.</strong>
+                        </div>
+                    </td>
+                    <td scope="row" class="flex items-center mt-4 px-6 py-4 text-gray-900 whitespace-nowrap">
+                        <img class="w-20 h-20 rounded-full" src={{team.profile_pic}}>
+                        <div class="pl-3">
+                            <div class="text-base font-semibold">{{ team.id }}</div>
+                            <div class="font-normal text-gray-500">{{ team.name }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <ul *ngIf="team.assets.length > 0 else msg">
+                            <li *ngFor="let asset of team.assets" class="capitalize mb-2">
+                                {{asset.name}} - ${{asset.value}}
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-semibold">${{ team.cash }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div *ngIf="team.net_worth > 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> ${{team.net_worth}}
+                        </div>
+                        <div *ngIf="team.net_worth <= 0" class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> ${{team.net_worth}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

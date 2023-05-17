@@ -144,37 +144,37 @@ export class DashboardComponent {
     },1000)
 
 
-    // setInterval(() => {
-    //   this.team_status = []
-    //   this.wall_of_fame = []
-    //   this.api.status_all_get().subscribe(res => {
-    //     k = res
-    //     this.team_status = k
+    setInterval(() => {
+      this.team_status = []
+      this.wall_of_fame = []
+      this.api.status_all_get().subscribe(res => {
+        k = res
+        this.team_status = k
       
-    //     for (let team of this.team_status){
-    //       for (let team_dp of this.team_status_dp){
-    //         if (team.team_id != 'admin'){
-    //           if (team.team_id != 'NONE'){
-    //             if (team_dp.id === team.team_id){
-    //               this.wall_of_fame.push(team_dp.dp)
-    //               if (this.wall_of_fame.length == 10){
-    //                 break;
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //       if (this.wall_of_fame.length == 10){
-    //         break;
-    //       }
-    //     }
-    //     // console.log(this.team_status_dp)
-    //     // console.log(this.team_status)
-    //   })
+        for (let team of this.team_status){
+          for (let team_dp of this.team_status_dp){
+            if (team.team_id != 'admin'){
+              if (team.team_id != 'NONE'){
+                if (team_dp.id === team.team_id){
+                  this.wall_of_fame.push(team_dp.dp)
+                  if (this.wall_of_fame.length == 10){
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          if (this.wall_of_fame.length == 10){
+            break;
+          }
+        }
+        // console.log(this.team_status_dp)
+        // console.log(this.team_status)
+      })
 
-      // this.live_transaction = []
-      // this.getting_live_transaction()
-    // },10000)
+      this.live_transaction = []
+      this.getting_live_transaction()
+    },10000)
     
   }
 
