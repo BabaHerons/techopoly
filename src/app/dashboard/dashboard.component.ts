@@ -84,16 +84,18 @@ export class DashboardComponent {
     this.api.assets_team_id_get(this.my_details.team_id).subscribe(res => {
       k = res
       this.my_details.assets = k
+      // console.log(this.my_details.assets)
     })
 
     // GETTING TEAM LATEST TRANSACTION
     this.api.transactions_team_id_get(this.my_details.team_id).subscribe(res => {
       k = res
       this.my_details.recent_transaction = k[k.length-1]
-      if(this.my_details.recent_transaction.assets != 'NONE'){
+      if((this.my_details.recent_transaction.assets != 'NONE') || this.my_details.recent_transaction.message === "Property sold"){
         this.api.assets_box_id_get(this.my_details.recent_transaction.assets).subscribe(res => {
-          k = res
-          this.my_details.recent_asset = k.name
+          let m:any = {}
+          m = res
+          this.my_details.recent_asset = m.name
         })
       }
     })
@@ -457,10 +459,67 @@ export class DashboardComponent {
     this.ngOnInit();
   }
 
-  sell_property(box_id:any) {
-    let btnDice = document.getElementById('btnDice')
-    btnDice?.classList.toggle('roll')
-    btnDice?.classList.toggle('roll-disabled')
+  sell_property(box_index:any) {
+    
+    let data = {
+      "amount":'NONE',
+      "gain":'false',
+      "loss":'true',
+      "assets":box_index,
+      "message": "Property sold"
+    }
+    
+    let val:any = ''
+    for (let asset of this.my_details.assets){
+      if (asset.box_index === box_index){
+        val = asset.value
+        break
+      }
+    }
+    let data_cash = {
+      "amount": val,
+      "gain":'true',
+      "loss":'false',
+      "assets":"NONE",
+      "message": "Sold property value added to wallet"
+    }
+    // ADDING THE PROPERTY VALUE TO THE CASH
+    this.api.transactions_team_id_post(this.my_details.team_id, data_cash).subscribe(res => {
+      let k:any = {}
+      k = res
+      if (k.amount === data_cash.amount && k.gain === data_cash.gain){
+        this.tostr.success("Money added to wallet")
+      }
+      else {
+        this.tostr.error("Unable to add money to wallet")
+      }
+    })
+
+    // REMOVING THE PROPERTY FROM THE USER
+    this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+      let k:any = {}
+      k = res
+      if (String(k.assets) === String(data.assets) && k.amount === data.amount){
+        this.tostr.success("Property Sold")
+      }
+      else {
+        this.tostr.error("Unable to sell the property")
+      }
+    })
+
+    if (this.isDisabled){
+      if (this.waitCount === 0){
+        let btnDice = document.getElementById('btnDice')
+        btnDice?.classList.toggle('roll')
+        btnDice?.classList.toggle('roll-disabled')
+        this.isDisabled = false
+      }
+      else {
+        this.tostr.info("Please wait until the Dice rolls completed")
+      }
+    }
+
+    this.ngOnInit();
   }
 
   toggle_portfolio = () => {
