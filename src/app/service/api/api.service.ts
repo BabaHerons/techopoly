@@ -7,8 +7,10 @@ import { Injectable } from '@angular/core';
 export class ApiService {
 
   constructor(private http:HttpClient) {}
-  private base_url = 'http://127.0.0.1:5000'
-  headers = new HttpHeaders({ 'Content-Type': 'application/json' })
+  // private base_url = 'http://127.0.0.1:5000'
+  private base_url = 'http://192.168.29.61:5000'
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' })
+  private code_header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
   
   // FOR TEAMS
   teams_all(){
@@ -76,6 +78,11 @@ export class ApiService {
   }
   assets_team_id_get(team_id:any){
     return this.http.get(this.base_url + `/assets/team/${team_id}`)
+  }
+
+  // FOR GETTING OUTPUT FROM USER CODE
+  code_output(data:any){
+    return this.http.post("https://api.codex.jaagrav.in", data, {'headers':this.headers})
   }
   
 

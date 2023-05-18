@@ -14,6 +14,7 @@ import { TeamDpComponent } from './team-dp/team-dp.component';
 import { LoginComponent } from './admin/login/login.component';
 import { LeaderboardComponent } from './admin/leaderboard/leaderboard.component';
 import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
     ReactiveFormsModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CodeEditorModule.forRoot()
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

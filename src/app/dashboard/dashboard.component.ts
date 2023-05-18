@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../service/api/api.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +13,8 @@ export class DashboardComponent {
   constructor(private router:Router, private tostr:ToastrService, private api:ApiService) {}
 
   ngOnInit(){
+    console.log(this.br_refresh)
+
     // this.list[0] = this.team_position
     this.live_transaction = []
     this.getting_live_transaction()
@@ -27,7 +30,7 @@ export class DashboardComponent {
       let k:any = {}
       k = res
       this.team_current_position_value = Math.floor(k.position) % 52
-      console.log(this.team_current_position_value)
+      // console.log(this.team_current_position_value)
       
       // FOR SETTING TEAM CURRENT POSITION
       this.team_current_position()
@@ -144,40 +147,51 @@ export class DashboardComponent {
     },1000)
 
 
-    setInterval(() => {
-      this.team_status = []
-      this.wall_of_fame = []
-      this.api.status_all_get().subscribe(res => {
-        k = res
-        this.team_status = k
-      
-        for (let team of this.team_status){
-          for (let team_dp of this.team_status_dp){
-            if (team.team_id != 'admin'){
-              if (team.team_id != 'NONE'){
-                if (team_dp.id === team.team_id){
-                  this.wall_of_fame.push(team_dp.dp)
-                  if (this.wall_of_fame.length == 10){
-                    break;
+    // if (sessionStorage.getItem('interval_time') === '1'){
+    if (this.br_refresh){
+      setInterval(() => {
+        this.team_status = []
+        this.wall_of_fame = []
+        this.api.status_all_get().subscribe(res => {
+          k = res
+          this.team_status = k
+        
+          for (let team of this.team_status){
+            for (let team_dp of this.team_status_dp){
+              if (team.team_id != 'admin'){
+                if (team.team_id != 'NONE'){
+                  if (team_dp.id === team.team_id){
+                    this.wall_of_fame.push(team_dp.dp)
+                    if (this.wall_of_fame.length == 10){
+                      break;
+                    }
                   }
                 }
               }
             }
+            if (this.wall_of_fame.length == 10){
+              break;
+            }
           }
-          if (this.wall_of_fame.length == 10){
-            break;
-          }
-        }
-        // console.log(this.team_status_dp)
-        // console.log(this.team_status)
-      })
+          // console.log(this.team_status_dp)
+          // console.log(this.team_status)
+        })
+        
+        console.log('Interval is working')
+        this.live_transaction = []
+        this.getting_live_transaction()
+      },10000)
+      this.br_refresh = false
+    }
+    
 
-      this.live_transaction = []
-      this.getting_live_transaction()
-    },10000)
+    this.select_lang_form.patchValue({
+      lang:"Choose Language"
+    })
     
   }
 
+  br_refresh:boolean = true
   waitCount: number = 0;
   interval: any;
   isDisabled = false;
@@ -570,6 +584,80 @@ export class DashboardComponent {
       }
     })
   }
+
+  select_lang_form = new FormGroup({
+    lang: new FormControl('')
+  })
+  
+  toggle_code_quest() {
+    let box_modal = document.getElementById('code_question')
+    box_modal?.classList.toggle('hidden')
+  }
+  
+  theme = 'vs-dark';
+  codeModel: any = {
+    language: '',
+    uri: 'main.json',
+    // value: '{}'
+  };
+  options = {
+    contextmenu: true,
+    minimap: {
+      enabled: true
+    }
+  };
+
+  // CHANGING THE CODING LANGUAGE
+  change_lang(){
+    let cm:any = {
+      language: this.select_lang_form.value.lang,
+      uri: 'main.json',
+    }
+    this.codeModel = cm
+  }
+
+  // SUBMITTING THE CODE WRITTEN BY USER
+  submit_code(){
+    let code_lang:any = ''
+    if (this.codeModel.language === 'python'){
+      code_lang = 'py'
+    }
+    else if (this.codeModel.language === 'javascript'){
+      code_lang = 'js'
+    }
+    else if (this.codeModel.language === 'java'){
+      code_lang = 'java'
+    }
+    else if (this.codeModel.language === 'cpp'){
+      code_lang = 'cpp'
+    }
+
+    let data:any = {
+      "code": this.codeModel.value,
+      "language":code_lang
+    }
+
+    // console.log(data)
+    this.api.code_output(data).subscribe(res => {
+      let k:any = {}
+      k = res
+      if (!k.error){
+        this.code_output = k.output
+      }
+      else {
+        this.code_output = k.error
+      }
+    },
+    error => {
+      this.code_output = error.error.error
+      console.log(error)
+    }
+    )
+  }
+
+  // STORING THE OUTPUT FROM COMPILER
+  code_output:any = ''
+  correct_answer = false
 
   sign_out = () => {
     sessionStorage.removeItem('team_id')

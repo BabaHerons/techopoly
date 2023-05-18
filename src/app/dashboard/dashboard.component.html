@@ -1,7 +1,7 @@
 <section class="flex flex-col items-center justify-between">
 
     <!-- THE HEADER PART WHICH CONTAINS (HALL OF FAME) AND (TEAM PORTFOLIO BUTTON) -->
-    <div class="flex justify-around w-full font-bold text-4xl pb-[20px]">
+    <div class="flex justify-between w-full font-bold text-4xl pb-[20px]">
         <!-- HALL OF FAME -->
         <div class="flex flex-col bg-[#2C3333] rounded py-2 px-4 mt-2 shadow shadow-gray-500">
             <p class="underline mb-4 text-[#0E8388]">Wall of Fame</p>
@@ -584,12 +584,13 @@
                             <div class="w-[35%]"><span class="underline font-bold">Current Owner:</span> <br> <span class="font-semibold uppercase">{{ current_box.current_owner }}</span></div>
                         </ng-template>
                     </div>
+                    <div *ngIf="current_box.current_owner === 'admin' && !correct_answer" class="w-full text-center"><span class="capitalize font-semibold">You need to solve the question to Purchase this property.</span></div>
                 </div>
 
                 <!-- CLOSE AND PURCHASE BUTTON -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_box_modal()">Close</button>
-                    <button *ngIf="current_box.current_owner === 'admin' else rent_msg" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="purchase_property()" (click)="toggle_box_modal()">Purchase</button>
+                    <button *ngIf="current_box.current_owner === 'admin' && correct_answer else rent_msg" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="purchase_property()" (click)="toggle_box_modal()">Purchase</button>
                     <ng-template #rent_msg>
                         <div *ngIf="this.current_box.current_owner != this.my_details.team_id && this.current_box.current_owner != 'admin' else no_rent">   
                             <div  class="flex justify-between text-red-900">
@@ -603,9 +604,69 @@
                             </div>
                         </div>
                         <ng-template #no_rent>
-                            <span>This property is owned by you.</span>
+                            <span *ngIf="this.current_box.current_owner === this.my_details.team_id">This property is owned by you.</span>
                         </ng-template>
                     </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL FOR SOLVING QUESTIONS FOR PROPERTY PURCHASE -->
+<div id="code_question" class="relative z-30" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8">
+
+                <!-- HEADER SECTION WHICH CONTAINS TEAM ID AND DISPLAY PICTURE -->
+                <div class="flex flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <h2 class="font-semibold text-start mb-2 uppercase">Question</h2>
+                    <!-- following is the image of the question -->
+                    <img class="w-[1000px] h-[200px]" src="/assets/box_img/1.jpeg"> 
+                    
+                </div>
+
+                <!-- MIDDLE PART i.e. DESCRIPTION ABOUT THE TEAM -->
+                <div *ngIf="'rent_amount' in current_box" class="flex flex-col px-4 py-3">
+                    <div class="flex justify-between">
+
+                        <!-- DROPDOWN TO SELECT LANGUAGE -->
+                        <form [formGroup]="select_lang_form">
+                            <select class="p-2 rounded-lg cursor-pointer " (click)="change_lang()" formControlName="lang">
+                                <option selected disabled>Choose Language</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="cpp">C++</option>
+                                <option value="java">Java</option>
+                            </select>
+                        </form>
+                        <h2 class="font-semibold text-center mb-2 underline uppercase"></h2>
+                        <div class="flex justify-center items-center m-2">
+                            <button type="button" class="inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto" (click)="submit_code()">Submit</button>
+                        </div>
+                    </div>
+
+                    <!-- CODE EDITOR -->
+                    <div class="flex w-full">
+                        <ngs-code-editor class="w-full h-[500px]"
+                        [theme]="theme"
+                        [codeModel]="codeModel"
+                        [options]="options"
+                        (loaded)="true">
+                        </ngs-code-editor>
+                    </div>
+                    <div class="flex flex-col w-full mt-4">
+                        <h2 class="font-semibold text-center mb-2 underline uppercase">Output</h2>
+                        <textarea name="" id="" cols="30" rows="10" disabled class="bg-gray-500 text-white p-2">{{code_output}}</textarea>
+                    </div>
+                </div>
+
+                <!-- CLOSE AND PURCHASE BUTTON -->
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_code_quest()">Close</button>
                 </div>
             </div>
         </div>
