@@ -15,7 +15,6 @@ import { LoginComponent } from './admin/login/login.component';
 import { LeaderboardComponent } from './admin/leaderboard/leaderboard.component';
 import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
 import { CodeEditorModule } from '@ngstack/code-editor';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -36,7 +35,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     BrowserAnimationsModule,
     CodeEditorModule.forRoot()
   ],
-  providers: [AuthGuard, {provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
