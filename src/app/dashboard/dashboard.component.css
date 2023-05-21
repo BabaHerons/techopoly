@@ -1,7 +1,12 @@
 .cell {
     @apply
-    w-[50px] h-[50px] 
+    w-[60px] h-[60px] 
     border-black border-[1px]
+}
+
+.ot-line {
+    @apply
+    outline-dashed outline-red-800 outline-8
 }
 
 .middle-empty-cell {

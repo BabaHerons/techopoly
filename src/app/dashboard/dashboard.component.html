@@ -1,9 +1,9 @@
-<section class="flex flex-col items-center justify-between">
+<section id="main-dashboard" class="flex flex-col items-center justify-between bg-black text-white">
 
     <!-- THE HEADER PART WHICH CONTAINS (HALL OF FAME) AND (TEAM PORTFOLIO BUTTON) -->
     <div class="flex justify-between w-full font-bold text-4xl pb-[20px]">
         <!-- HALL OF FAME -->
-        <div class="flex flex-col bg-[#2C3333] rounded py-2 px-4 mt-2 shadow shadow-gray-500">
+        <div class="flex flex-col bg-[#2C3333] py-2 px-4 shadow shadow-gray-500">
             <p class="underline mb-4 text-[#0E8388]">Wall of Fame</p>
             <div class="flex gap-1">
                 <div class="flex flex-col items-center">
@@ -54,267 +54,267 @@
     <!-- THE TECHOPOLY BOARD GAME TABLE -->
     <div class="flex flex-col border-black border-2">
         <!-- ROW 1 -->
-        <div class="flex">
-            <div class="cell bg-yellow-400">
+        <div id="1" class="flex">
+            <div id="10000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[10]"></div>
-                <img class="w-full h-full" src="/assets/datacenter.jpg" alt="">
+                <img class="w-full h-full" src="/assets/box_img/10.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="11000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[11]"></div>
                 <img class="w-full h-full" src="/assets/tax.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400 ">
+            <div id="12000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[12]"></div>
-                <img class="w-full h-full" src="/assets/treasure.jpg" alt="">
+                <img class="w-full h-full" src="/assets/box_img/12.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="13000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[13]"></div>
-                <img class="w-full h-full" src="/assets/fashion.jpg" alt="">
+                <img class="w-full h-full" src="/assets/box_img/13.jpg" alt="">
             </div>
-            <div class="cell bg-white">
+            <div id="14000" class="cell bg-white">
                 <div [innerHTML]="list[14]"></div>
-                <img class="w-full h-full p-2" src="/assets/blackhole.jpg" alt="">
+                <img class="w-full h-full" src="/assets/box_img/14.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="15000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[15]"></div>
                 <img class="w-full h-full" src="/assets/restaurant.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="16000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[16]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="17000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[17]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="18000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[18]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="19000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[19]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="20000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[20]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="21000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[21]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="22000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[22]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="23000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[23]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="24000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[24]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="25000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[25]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="26000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[26]"></div>
                 <img class="w-full h-full" src="/assets/health.avif" alt="">
             </div>
         </div>
 
         <!-- ROW 2 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="2" class="flex">
+            <div id="9000" class="cell bg-white">
                 <div [innerHTML]="list[9]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell border-t-2"></div>
-            <div class="cell bg-lime-400">
+            <div id="27000" class="cell bg-lime-400">
                 <div [innerHTML]="list[27]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 3 -->
-        <div class="flex">
-            <div class="cell bg-slate-400">
+        <div id="3" class="flex">
+            <div id="8000" class="cell bg-slate-400">
                 <div [innerHTML]="list[8]"></div>
                 <img src="/assets/restaurant.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="28000" class="cell bg-lime-400">
                 <div [innerHTML]="list[28]"></div>
                 <img class="w-full h-full" src="/assets/treasure.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 4 -->
-        <div class="flex justify-between">
-            <div class="cell bg-slate-400">
+        <div id="4" class="flex justify-between">
+            <div id="7000" class="cell bg-slate-400">
                 <div [innerHTML]="list[7]"></div>
                 <img class="w-full h-full" src="/assets/grocery.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="29000" class="cell bg-lime-400">
                 <div [innerHTML]="list[29]"></div>
                 <img class="w-full h-full" src="/assets/fashion.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 5 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="5" class="flex">
+            <div id="6000" class="cell bg-white">
                 <div [innerHTML]="list[6]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="30000" class="cell bg-lime-400">
                 <div [innerHTML]="list[30]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 6 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="6" class="flex">
+            <div id="5000" class="cell bg-white">
                 <div [innerHTML]="list[5]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="grow border-black border-x-2">
-                <a href="#" class="flex items-center justify-center h-full text-4xl font-semibold text-gray-900">
+                <!-- <a class="flex items-center justify-center h-full text-4xl font-semibold text-gray-900">
                     <img class="w-8 h-8 mr-2" src="/assets/dice.jpg" alt="logo">
                     Techopoly    
-                </a>
+                </a> -->
             </div>
-            <div class="cell bg-lime-400">
+            <div id="31000" class="cell bg-lime-400">
                 <div [innerHTML]="list[31]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 7 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="7" class="flex">
+            <div id="4000" class="cell bg-white">
                 <div [innerHTML]="list[4]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="32000" class="cell bg-lime-400">
                 <div [innerHTML]="list[32]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 8 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="8" class="flex">
+            <div id="3000" class="cell bg-white">
                 <div [innerHTML]="list[3]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="33000" class="cell bg-lime-400">
                 <div [innerHTML]="list[33]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 9 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="9" class="flex">
+            <div id="2000" class="cell bg-white">
                 <div [innerHTML]="list[2]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="34000" class="cell bg-lime-400">
                 <div [innerHTML]="list[34]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
 
         <!-- ROW 10 -->
-        <div class="flex">
-            <div class="cell bg-white">
+        <div id="10" class="flex">
+            <div id="10000" class="cell bg-white">
                 <div [innerHTML]="list[1]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
             <div class="middle-empty-cell"></div>
-            <div class="cell bg-lime-400">
+            <div id="35000" class="cell bg-lime-400">
                 <div [innerHTML]="list[35]"></div>
                 <img class="w-full h-full" src="/assets/housing.jpg" alt="">
             </div>
         </div>
         
         <!-- ROW 11 -->
-        <div class="flex">
-            <div class="cell bg-yellow-400">
+        <div id="11" class="flex">
+            <div id="0" class="cell bg-yellow-400">
                 <div [innerHTML]="list[0]"></div>
                 <!-- <app-team-dp></app-team-dp> -->
                 <img src="/assets/start.png" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="51000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[51]"></div>
                 <img class="w-full h-full" src="/assets/theater.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="50000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[50]"></div>
                 <img class="w-full h-full" src="/assets/electronics.jpg" alt="">
             </div>
-            <div class="cell bg-white">
+            <div id="49000" class="cell bg-white">
                 <div [innerHTML]="list[49]"></div>
                 <img class="p-2 w-full h-full" src="/assets/blackhole.jpg" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="48000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[48]"></div>
                 <img class="w-full h-full" src="/assets/office.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="47000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[47]"></div>
                 <img class="w-full h-full" src="/assets/meditation.avif" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="46000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[46]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="45000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[45]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="44000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[44]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="43000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[43]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="42000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[42]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="41000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[41]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="40000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[40]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="39000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[39]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="38000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[38]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="37000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[37]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
-            <div class="cell bg-yellow-400">
+            <div id="36000" class="cell bg-yellow-400">
                 <div [innerHTML]="list[36]"></div>
                 <img class="w-full h-full" src="/assets/jail.webp" alt="">
             </div>
@@ -584,13 +584,17 @@
                             <div class="w-[35%]"><span class="underline font-bold">Current Owner:</span> <br> <span class="font-semibold uppercase">{{ current_box.current_owner }}</span></div>
                         </ng-template>
                     </div>
-                    <div *ngIf="current_box.current_owner === 'admin' && !correct_answer" class="w-full text-center"><span class="capitalize font-semibold">You need to solve the question to Purchase this property.</span></div>
+                    <div *ngIf="current_box.current_owner === 'admin' && !correct_answer" class="w-full text-center mt-2"><span class="capitalize font-semibold">You need to solve the question to Purchase this property.</span></div>
                 </div>
 
                 <!-- CLOSE AND PURCHASE BUTTON -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_box_modal()">Close</button>
                     <button *ngIf="current_box.current_owner === 'admin' && correct_answer else rent_msg" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="purchase_property()" (click)="toggle_box_modal()">Purchase</button>
+                    <div *ngIf="current_box.current_owner === 'admin' && !correct_answer" class="flex flex-row-reverse justify-between w-full">
+                        <button type="button" class="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto" (click)="toggle_code_quest()">View Question</button>
+                        <p>Level: <span class="uppercase font-semibold">{{current_box.ques_level}}</span></p>
+                    </div>
                     <ng-template #rent_msg>
                         <div *ngIf="this.current_box.current_owner != this.my_details.team_id && this.current_box.current_owner != 'admin' else no_rent">   
                             <div  class="flex justify-between text-red-900">
@@ -615,7 +619,7 @@
 
 
 <!-- MODAL FOR SOLVING QUESTIONS FOR PROPERTY PURCHASE -->
-<div id="code_question" class="relative z-30" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div id="code_question" class="relative z-30 hidden">
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -625,7 +629,7 @@
                 <div class="flex flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <h2 class="font-semibold text-start mb-2 uppercase">Question</h2>
                     <!-- following is the image of the question -->
-                    <img class="w-[1000px] h-[200px]" src="/assets/box_img/1.jpeg"> 
+                    <img class="w-[1000px] h-[200px]" src="/assets/box_img/{{1}}.jpeg"> 
                     
                 </div>
 
@@ -650,12 +654,12 @@
                     </div>
 
                     <!-- CODE EDITOR -->
-                    <div class="flex w-full">
-                        <ngs-code-editor class="w-full h-[500px]"
+                    <div  class="flex w-full" *ngIf="monaco_editor">
+                        <ngs-code-editor id="code-editor" class="w-full h-[500px]"
                         [theme]="theme"
                         [codeModel]="codeModel"
                         [options]="options"
-                        (loaded)="true">
+                        (loaded)="true" (valueChanged)="true">
                         </ngs-code-editor>
                     </div>
                     <div class="flex flex-col w-full mt-4">

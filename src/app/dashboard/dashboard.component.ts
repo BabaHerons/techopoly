@@ -181,6 +181,7 @@ export class DashboardComponent {
         this.live_transaction = []
         this.getting_live_transaction()
       },10000)
+      this.popovers()
       this.br_refresh = false
     }
     
@@ -342,16 +343,24 @@ export class DashboardComponent {
     }, 100);
   };
 
-  team_position = '<div class = "relative"><div class="absolute inset-0.5 bg-pink-600 blur rounded-full opacity-75 w-[50px] h-[50px]"></div></div>'
+  // team_position = '<div class = "relative z-20"><div class="absolute inset-0.5 bg-pink-600 blur rounded-full opacity-75 w-[50px] h-[50px]"></div></div>'
   team_current_position = () => {
     this.list[0]=''
     for (let i=0; i<52; i++){
+      let d = document.getElementById((i*1000).toString())
+      if (d?.classList.contains('ot-line')){
+        d.classList.toggle('ot-line')
+        d.classList.toggle('z-10')
+      }
       if (i === this.team_current_position_value){
-        this.list[i] = this.team_position
+        // this.list[i] = this.team_position
+        let div:any = document.getElementById((i*1000).toString())
+        div.classList.toggle('ot-line')
+        div.classList.toggle('z-10')
       }
-      else {
-        this.list[i] = ''
-      }
+      // else {
+      //   this.list[i] = ''
+      // }
     }
   }
 
@@ -442,33 +451,42 @@ export class DashboardComponent {
       "message": "Property purchased"
     }
 
-    if (Number(this.my_details.cash) > Number(this.current_box.value)){
-      let k:any = {}
-      this.api.transactions_team_id_post(this.my_details.team_id, data_cash).subscribe(res => {
-        k = res
-        console.log(k)
-        if (k.amount === this.current_box.value && k.gain === 'false'){
-          this.tostr.success("Transaction is successfull")
+    this.api.assets_box_id_get(this.current_box.box_index).subscribe(res => {
+      let a:any ={}
+      a = res
+      if (a.current_owner === 'admin'){
+        if (Number(this.my_details.cash) > Number(this.current_box.value)){
+          let k:any = {}
+          this.api.transactions_team_id_post(this.my_details.team_id, data_cash).subscribe(res => {
+            k = res
+            console.log(k)
+            if (k.amount === this.current_box.value && k.gain === 'false'){
+              this.tostr.success("Transaction is successfull")
+            }
+            else {
+              this.tostr.error('Transaction Failed')
+            }
+          })
+    
+          let p:any = {}
+          this.api.transactions_team_id_post(this.my_details.team_id, data_asset).subscribe(res => {
+            p = res
+            console.log(p)
+            if (Number(p.assets) === Number(this.current_box.box_index)){
+              this.tostr.success("Property purchased")
+            }
+            else {
+              this.tostr.error("Something went wrong")
+            }
+          })
+        } else {
+          this.tostr.info("You don't have enough cash")
         }
-        else {
-          this.tostr.error('Transaction Failed')
-        }
-      })
-
-      let p:any = {}
-      this.api.transactions_team_id_post(this.my_details.team_id, data_asset).subscribe(res => {
-        p = res
-        console.log(p)
-        if (Number(p.assets) === Number(this.current_box.box_index)){
-          this.tostr.success("Property purchased")
-        }
-        else {
-          this.tostr.error("Something went wrong")
-        }
-      })
-    } else {
-      this.tostr.info("You don't have enough cash")
-    }
+      }
+      else {
+        this.tostr.info("Property Occupied by solving the question faster than you.")
+      }
+    })
 
     this.ngOnInit();
   }
@@ -491,7 +509,7 @@ export class DashboardComponent {
       }
     }
     let data_cash = {
-      "amount": val,
+      "amount": Math.floor(0.7 * Math.floor(val)),
       "gain":'true',
       "loss":'false',
       "assets":"NONE",
@@ -589,16 +607,21 @@ export class DashboardComponent {
     lang: new FormControl('')
   })
   
+  monaco_editor:boolean = false
   toggle_code_quest() {
     let box_modal = document.getElementById('code_question')
     box_modal?.classList.toggle('hidden')
+
+    if (!this.monaco_editor){
+      this.monaco_editor = true
+    }
   }
   
   theme = 'vs-dark';
   codeModel: any = {
     language: '',
     uri: 'main.json',
-    // value: '{}'
+    value: 'Please delete this line before you start coding.'
   };
   options = {
     contextmenu: true,
@@ -658,6 +681,61 @@ export class DashboardComponent {
   // STORING THE OUTPUT FROM COMPILER
   code_output:any = ''
   correct_answer = false
+
+  popovers(){
+    for (let k=1; k<12; k++){
+      if (k===1 || k===11){
+        let row = document.getElementById(k.toString())
+        let childs:any = row?.children
+        for (let i=0; i < childs?.length; i++){
+          let div:any = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+          <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+              <h3 class="font-semibold text-gray-900">Popover title</h3>
+          </div>
+          <div class="px-3 py-2">
+              <p>And here's some amazing content. It's very engaging. Right?</p>
+          </div>
+          <div data-popper-arrow></div>
+                        </div>`
+          if (k === 11 && i === 0){}
+          else {
+            childs[i].setAttribute('data-popover-target', i+k*100)
+            childs[i].innerHTML += div
+          }
+        }
+      }
+      else if (1<k && k<11){
+        let row = document.getElementById(k.toString())
+        let childs:any = row?.children
+        let div_left:any = `<div data-popover id="${k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+            <h3 class="font-semibold text-gray-900">Popover left</h3>
+        </div>
+        <div class="px-3 py-2">
+            <p>And here's some amazing content. It's very engaging. Right?</p>
+        </div>
+        <div data-popper-arrow></div>
+        </div>`
+        let div_right:any = `<div data-popover id="${k*100+1}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+            <h3 class="font-semibold text-gray-900">Popover right</h3>
+        </div>
+        <div class="px-3 py-2">
+            <p>And here's some amazing content. It's very engaging. Right?</p>
+        </div>
+        <div data-popper-arrow></div>
+        </div>`
+
+        childs[0].setAttribute('data-popover-target', k*100)
+        childs[0].setAttribute("data-popover-placement","left")
+        childs[0].innerHTML += div_left
+
+        childs[2].setAttribute('data-popover-target', k*100+1)
+        childs[2].setAttribute("data-popover-placement","right")
+        childs[2].innerHTML += div_right
+      }
+    }
+  }
 
   sign_out = () => {
     sessionStorage.removeItem('team_id')
