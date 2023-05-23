@@ -125,8 +125,8 @@ export class ApiService {
   question_image_put(id:any, file:any){
     return this.http.put(this.base_url + `/questions/${id}`, file)
   }
-  question_random_team_id_get(team_id:any){
-    return this.http.get(this.base_url + `/questions/teams/${team_id}`)
+  question_random_team_id_get(team_id:any, level:any){
+    return this.http.get(this.base_url + `/questions/teams/${team_id}/${level}`)
   }
 
   // FOR GETTING OUTPUT FROM USER CODE

@@ -325,7 +325,7 @@
     <div class="flex justify-around w-full font-bold pt-[20px] pb-2">
 
         <!-- LIVE TRANSACTION -->
-        <div class="">
+        <div class="w-[400px]">
             <span class="underline text-4xl">Live Transaction</span> <br>
             <!-- RECENT TRANSACTION UPON GAIN -->
             <div *ngIf="live_transaction.gain === 'true'">
@@ -449,13 +449,15 @@
         -->
         <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 
-          <!-- HEADER SECTION WHICH CONTAINS TEAM ID AND DISPLAY PICTURE -->
+          <!-- CHECKING WHETHER THE TEAM IS ABLE TO PURCHASE THE PROPERTY OR NOT -->
           <div *ngIf="my_details.active === 'false' && my_details.net_worth > 0" class="text-red-700 p-5 text-center">
-          <span>You need to sell your property to continue in the game as you don't have the sufficient cash.</span>
+            <span>You need to sell your property to continue in the game as you don't have the sufficient cash.</span>
           </div>
           <div *ngIf="my_details.active === 'false' && my_details.net_worth < 0" class="text-red-700 p-5 text-center">
-          <span>You can't continue in the game as you don't have any cash left and you have no property to sell.</span>
+            <span>You can't continue in the game as you don't have any cash left and you have no property to sell.</span>
           </div>
+          
+          <!-- HEADER SECTION WHICH CONTAINS TEAM ID AND DISPLAY PICTURE -->
           <div class="flex justify-between bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="flex w-[80%] justify-around">
                 <div class="relative inline-block mb-2">
@@ -629,7 +631,7 @@
                 <div class="flex flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <h2 class="font-semibold text-start mb-2 uppercase">Question</h2>
                     <!-- following is the image of the question -->
-                    <img class="w-[1000px] h-[200px]" src="/assets/box_img/{{1}}.jpeg"> 
+                    <img class="w-[960px] h-[540px]" [src]="current_question.question"> 
                     
                 </div>
 
@@ -655,6 +657,7 @@
 
                     <!-- CODE EDITOR -->
                     <div  class="flex w-full" *ngIf="monaco_editor">
+                    <!-- <div  class="flex w-full"> -->
                         <ngs-code-editor id="code-editor" class="w-full h-[500px]"
                         [theme]="theme"
                         [codeModel]="codeModel"
@@ -664,7 +667,38 @@
                     </div>
                     <div class="flex flex-col w-full mt-4">
                         <h2 class="font-semibold text-center mb-2 underline uppercase">Output</h2>
-                        <textarea name="" id="" cols="30" rows="10" disabled class="bg-gray-500 text-white p-2">{{code_output}}</textarea>
+                        <!-- <textarea name="" id="" cols="30" rows="10" disabled class="bg-gray-500 text-white p-2">{{code_output}}</textarea> -->
+                        <div class="flex justify-around">
+                            <div class="flex flex-col">
+                                <h2 class="font-semibold text-center mb-2 underline uppercase">Test Case 1</h2>
+                                <div *ngIf="code_output.out1 === 'NONE' else out1"></div>
+                                <ng-template #out1>
+                                    <img *ngIf="code_output.out1" class="w-[100px]" src="/assets/true.png">
+                                    <img *ngIf="!code_output.out1" class="w-[80px]" src="/assets/false.png">
+                                </ng-template>
+                            </div>
+                            <div class="flex flex-col">
+                                <h2 class="font-semibold text-center mb-2 underline uppercase">Test Case 2</h2>
+                                <div *ngIf="code_output.out2 === 'NONE' else out2"></div>
+                                <ng-template #out2>
+                                    <img *ngIf="code_output.out2" class="w-[100px]" src="/assets/true.png">
+                                    <img *ngIf="!code_output.out2" class="w-[80px]" src="/assets/false.png">
+                                </ng-template>
+                            </div>
+                            <div class="flex flex-col">
+                                <h2 class="font-semibold text-center mb-2 underline uppercase">Test Case 3</h2>
+                                <div *ngIf="code_output.out3 === 'NONE' else out3"></div>
+                                <ng-template #out3>
+                                    <img *ngIf="code_output.out3" class="w-[100px]" src="/assets/true.png">
+                                    <img *ngIf="!code_output.out3" class="w-[80px]" src="/assets/false.png">
+                                </ng-template>
+                            </div>
+                            <div class="flex flex-col">
+                                <h2 class="font-semibold text-center mb-2 underline uppercase">Final Result</h2>
+                                <img *ngIf="correct_answer" class="w-[100px]" src="/assets/true.png">
+                                <img *ngIf="!correct_answer" class="w-[80px]" src="/assets/false.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
 

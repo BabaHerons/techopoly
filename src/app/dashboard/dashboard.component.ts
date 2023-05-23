@@ -13,7 +13,8 @@ export class DashboardComponent {
   constructor(private router:Router, private tostr:ToastrService, private api:ApiService) {}
 
   ngOnInit(){
-    console.log(this.br_refresh)
+    // console.log(this.br_refresh)
+    this.correct_answer = false
 
     // this.list[0] = this.team_position
     this.live_transaction = []
@@ -66,7 +67,7 @@ export class DashboardComponent {
       this.my_details.name = k.name
     })
 
-    // GETTING TEAM CASH, NET_WORTH, STATUS
+    // GETTING TEAM CASH, NET_WORTH, STATUS, ACTIVE
     let k:any = {}
     this.api.status_id_get(this.my_details.team_id).subscribe(res => {
       k = res
@@ -207,6 +208,7 @@ export class DashboardComponent {
   team_id = sessionStorage.getItem('team_id')
   total_team:number = 0
   current_box:any = {}
+  current_question:any = {}
 
   startTimer() {
     let btnDice = document.getElementById('btnDice')
@@ -421,9 +423,18 @@ export class DashboardComponent {
 
         // ALLOTING THE QUESTION IF THE BOX HAS NO OWNER
         if (this.current_box.current_owner === 'admin'){
-          this.api.assets_box_id_get(this.current_box.box_index).subscribe(res => {
-            let asset:any = {}
-            asset = res
+          this.api.question_random_team_id_get(this.my_details.team_id, this.current_box.ques_level).subscribe(res => {
+            this.current_question = res
+            this.current_question.test_case1 = this.current_question.test_case1.replace('\\n', '\n')
+            this.current_question.test_case2 = this.current_question.test_case2.replace('\\n', '\n')
+            this.current_question.test_case3 = this.current_question.test_case3.replace('\\n', '\n')
+            // console.log(this.current_question)
+
+            // GETTING THE IMAGE OF THE QUESTION
+            this.api.question_image_get(this.current_question.id).subscribe((res: Blob) => {
+              let objectURL = URL.createObjectURL(res);       
+              this.current_question.question = objectURL
+            })
           })
         }
       })
@@ -467,7 +478,7 @@ export class DashboardComponent {
           let k:any = {}
           this.api.transactions_team_id_post(this.my_details.team_id, data_cash).subscribe(res => {
             k = res
-            console.log(k)
+            // console.log(k)
             if (k.amount === this.current_box.value && k.gain === 'false'){
               this.tostr.success("Transaction is successfull")
             }
@@ -479,7 +490,7 @@ export class DashboardComponent {
           let p:any = {}
           this.api.transactions_team_id_post(this.my_details.team_id, data_asset).subscribe(res => {
             p = res
-            console.log(p)
+            // console.log(p)
             if (Number(p.assets) === Number(this.current_box.box_index)){
               this.tostr.success("Property purchased")
             }
@@ -665,29 +676,75 @@ export class DashboardComponent {
 
     let data:any = {
       "code": this.codeModel.value,
-      "language":code_lang
+      "language":code_lang,
+      "input": ""
     }
 
-    // console.log(data)
+    // CHECKING THE TEST CASE 1
+    data.input = this.current_question.test_case1
     this.api.code_output(data).subscribe(res => {
       let k:any = {}
       k = res
-      if (!k.error){
-        this.code_output = k.output
+      if (k.output.includes(this.current_question.out1)){
+        this.code_output.out1 = true
       }
       else {
-        this.code_output = k.error
+        this.code_output.out1 = false
       }
+
+      // CHECKING THE TEST CASE 2
+      data.input = this.current_question.test_case2
+      this.api.code_output(data).subscribe(res => {
+        let l:any = {}
+        l = res
+        if (l.output.includes(this.current_question.out2)){
+          this.code_output.out2 = true
+        }
+        else {
+          this.code_output.out2 = false
+        }
+
+        // CHECKING THE TEST CASE 3
+        data.input = this.current_question.test_case3
+        this.api.code_output(data).subscribe(res => {
+          let n:any = {}
+          n = res
+          if (n.output.includes(this.current_question.out3)){
+            this.code_output.out3 = true
+          }
+          else {
+            this.code_output.out3 = false
+          }
+
+          // IF ALL ANSWERS ARE TRUE THEN MAKING CORRECT ANSWER AS TRUE
+          if (this.code_output.out1 && this.code_output.out2 && this.code_output.out3){
+            this.correct_answer = true
+            
+            // API CALLING FOR UPDATING THE SOLVED QUESTIONS IN TEAM STATUS.CODING_QUES
+          }
+        },
+        error => {
+          this.code_output = error.error.error
+          console.log(error)
+        })
+      },
+      error => {
+        this.code_output = error.error.error
+        console.log(error)
+      })
     },
     error => {
       this.code_output = error.error.error
       console.log(error)
-    }
-    )
+    })
   }
 
   // STORING THE OUTPUT FROM COMPILER
-  code_output:any = ''
+  code_output:any = {
+    out1:'NONE',
+    out2:'NONE',
+    out3:'NONE'
+  }
   correct_answer = false
 
   popovers(){
