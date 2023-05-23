@@ -8,8 +8,8 @@ export class ApiService {
 
   constructor(private http:HttpClient) {}
   // private base_url = 'http://127.0.0.1:5000'
-  // private base_url = 'http://192.168.29.61:5000'
-  private base_url = 'https://techopoly.babaherons.in/api'
+  private base_url = 'http://192.168.29.61:5000'
+  // private base_url = 'https://techopoly.babaherons.in/api'
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' })
   private code_header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
   
@@ -61,6 +61,15 @@ export class ApiService {
   status_id_position_update_put(team_id:any, data:any){
     return this.http.put(this.base_url + `/status/${team_id}`, data, {'headers':this.headers})
   }
+  status_id_rewards_ques_update_put(team_id:any, data:any){
+    return this.http.put(this.base_url + `/status/rewads/${team_id}`, data, {'headers':this.headers})
+  }
+  status_id_coding_ques_update_put(team_id:any, data:any){
+    return this.http.put(this.base_url + `/status/questions/${team_id}`, data, {'headers':this.headers})
+  }
+  status_id_active_update_put(team_id:any, data:any){
+    return this.http.put(this.base_url + `/status/active/${team_id}`, data, {'headers':this.headers})
+  }
 
   // TRANSACTIONS
   transactions_team_id_get(team_id:any){
@@ -79,6 +88,45 @@ export class ApiService {
   }
   assets_team_id_get(team_id:any){
     return this.http.get(this.base_url + `/assets/team/${team_id}`)
+  }
+
+  // PENALTY
+  penalty_all_get(){
+    return this.http.get(this.base_url + '/penalty')
+  }
+  penalty_post(data:any){
+    return this.http.post(this.base_url + '/penalty', data, {'headers':this.headers})
+  }
+  penalty_random_get(data:any){
+    return this.http.get(this.base_url + '/penalty/random')
+  }
+
+  // REWARDS
+  rewards_all_get(){
+    return this.http.get(this.base_url + '/rewards')
+  }
+  rewards_post(data:any){
+    return this.http.post(this.base_url + '/rewards', data, {'headers':this.headers})
+  }
+  rewards_team_id_get(team_id:any){
+    return this.http.get(this.base_url + `/rewards/teams/${team_id}`)
+  }
+
+  // CODING QUESTIONS
+  questions_all_get(){
+    return this.http.get(this.base_url + '/questions')
+  }
+  questions_post(data:any){
+    return this.http.post(this.base_url + '/questions', data, {'headers':this.headers})
+  }
+  question_image_get(id:any){
+    return this.http.get(this.base_url + `/questions/${id}`, {responseType:'blob'})
+  }
+  question_image_put(id:any, file:any){
+    return this.http.put(this.base_url + `/questions/${id}`, file)
+  }
+  question_random_team_id_get(team_id:any){
+    return this.http.get(this.base_url + `/questions/teams/${team_id}`)
   }
 
   // FOR GETTING OUTPUT FROM USER CODE

@@ -7,6 +7,9 @@ import { LoginComponent } from './admin/login/login.component';
 import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
 import { LeaderboardComponent } from './admin/leaderboard/leaderboard.component';
 import { AdminAuthGuard } from './guard/admin/admin-auth.guard';
+import { QuestionsComponent } from './admin/questions/questions.component';
+import { RewardsComponent } from './admin/rewards/rewards.component';
+import { PenaltyComponent } from './admin/penalty/penalty.component';
 
 const routes: Routes = [
   {
@@ -34,6 +37,21 @@ const routes: Routes = [
   {
     path:'admin/leaderboard',
     component:LeaderboardComponent,
+    canActivate:[AdminAuthGuard]
+  },
+  {
+    path:'admin/questions',
+    component:QuestionsComponent,
+    canActivate:[AdminAuthGuard]
+  },
+  {
+    path:'admin/rewards',
+    component:RewardsComponent,
+    canActivate:[AdminAuthGuard]
+  },
+  {
+    path:'admin/penalty',
+    component:PenaltyComponent,
     canActivate:[AdminAuthGuard]
   }
 ];

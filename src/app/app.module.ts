@@ -15,6 +15,9 @@ import { LoginComponent } from './admin/login/login.component';
 import { LeaderboardComponent } from './admin/leaderboard/leaderboard.component';
 import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
 import { CodeEditorModule } from '@ngstack/code-editor';
+import { QuestionsComponent } from './admin/questions/questions.component';
+import { RewardsComponent } from './admin/rewards/rewards.component';
+import { PenaltyComponent } from './admin/penalty/penalty.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { CodeEditorModule } from '@ngstack/code-editor';
     TeamDpComponent,
     LoginComponent,
     LeaderboardComponent,
-    AdminHomeComponent
+    AdminHomeComponent,
+    QuestionsComponent,
+    RewardsComponent,
+    PenaltyComponent
   ],
   imports: [
     BrowserModule,

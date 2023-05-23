@@ -418,6 +418,14 @@ export class DashboardComponent {
             })
           }
         }
+
+        // ALLOTING THE QUESTION IF THE BOX HAS NO OWNER
+        if (this.current_box.current_owner === 'admin'){
+          this.api.assets_box_id_get(this.current_box.box_index).subscribe(res => {
+            let asset:any = {}
+            asset = res
+          })
+        }
       })
     },
     error => {
