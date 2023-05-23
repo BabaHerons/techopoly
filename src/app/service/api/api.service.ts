@@ -8,8 +8,8 @@ export class ApiService {
 
   constructor(private http:HttpClient) {}
   // private base_url = 'http://127.0.0.1:5000'
-  private base_url = 'http://192.168.29.61:5000'
-  // private base_url = 'https://techopoly.babaherons.in/api'
+  // private base_url = 'http://192.168.29.61:5000'
+  private base_url = 'https://techopoly.babaherons.in/api'
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' })
   private code_header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
   
