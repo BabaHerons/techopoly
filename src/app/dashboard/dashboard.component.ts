@@ -14,7 +14,13 @@ export class DashboardComponent {
 
   ngOnInit(){
     // console.log(this.br_refresh)
+    this.code_output = {
+      out1:'NONE',
+      out2:'NONE',
+      out3:'NONE'
+    }
     this.correct_answer = false
+    this.current_question = {}
 
     // this.list[0] = this.team_position
     this.live_transaction = []
@@ -507,6 +513,7 @@ export class DashboardComponent {
       }
     })
 
+    this.toggle_box_modal();
     this.ngOnInit();
   }
 
