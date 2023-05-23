@@ -18,6 +18,8 @@ export class LeaderboardComponent {
   ) {}
 
   ngOnInit(){
+    this.t.setTitle('Team Leaderboard | Techopoly')
+
     this.get_details()
 
     setTimeout(() => {

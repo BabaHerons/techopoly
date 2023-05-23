@@ -1,1 +1,79 @@
-<p>penalty works!</p>
+<section class="bg-gray-50 flex justify-around">
+    <div class="flex flex-col items-center justify-center py-8 w-[35%] ml-5">
+        <a class="flex items-center mb-6 text-2xl font-semibold text-gray-900">
+            <img class="w-8 h-8 mr-2" src="/assets/dice.jpg" alt="logo">
+            Techopoly    
+        </a>
+        <a routerLink="/admin/home" type="button" class="mb-4 bg-black text-white focus:ring-4 focus:outline-none focus:ring-white font-medium rounded-lg text-sm px-5 py-2.5 text-center  bg-primary-600  hover:bg-gray-800  focus:ring-primary-800" >HOME</a>
+        <!-- ADDING QUESTIONS -->
+        <div class="w-full bg-white rounded-lg shadow  border md:mt-0 sm:max-w-md xl:p-0 border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                    Add Penalty Statements
+                </h1>
+                <form class="space-y-4 md:space-y-6" [formGroup]="penalty_form">
+                    <div>
+                        <label for="statement" class="block mb-2 text-sm font-medium text-gray-900 ">Penalty Statement</label>
+                        <input type="text" formControlName="statement" id="statement" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                    </div>
+                    <div>
+                        <label for="value" class="block mb-2 text-sm font-medium text-gray-900">Penalty Charge</label>
+                        <input type="text" formControlName="value" id="value" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                    </div>
+
+                    <!-- BUTTON TO REGISTER THE TEAM -->
+                    <button type="button" class="bg-black text-white w-full focus:ring-4 focus:outline-none focus:ring-white font-medium rounded-lg text-sm px-5 py-2.5 text-center  bg-primary-600  hover:bg-gray-800  focus:ring-primary-800" (click)="add_penalty()">Add Penalty</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CODING QUESTIONS TABLE -->
+    <div class="flex flex-col items-center py-8 w-[65%] mx-11">
+        <div class="flex justify-between w-full">
+            <a class="flex items-center text-2xl font-semibold text-gray-900">
+                Penalty Statements
+            </a>
+            <a routerLink="/admin/leaderboard" type="button" class="mb-4 bg-black text-white focus:ring-4 focus:outline-none focus:ring-white font-medium rounded-lg text-sm px-5 py-2.5 text-center  bg-primary-600  hover:bg-gray-800  focus:ring-primary-800" >Team Leaderboard</a>
+            <div class="flex items-center">
+                <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-500 sm:mt-0 sm:w-auto" (click)="ngOnInit()">Refresh</button>
+            </div>
+        </div>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            S.NO.
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Statement
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Value
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pen of penalties" class="bg-white border-b">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ penalties.indexOf(pen) + 1 }}.</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ pen.statement }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>${{ pen.value }}</strong>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -13,21 +13,36 @@
                 </h1>
                 <form class="space-y-4 md:space-y-6" [formGroup]="rewards_form">
                     <div>
-                        <label for="team_id" class="block mb-2 text-sm font-medium text-gray-900 ">Team ID</label>
-                        <input type="text" formControlName="team_id" id="team_id" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        <label for="question" class="block mb-2 text-sm font-medium text-gray-900 ">Question</label>
+                        <textarea type="text" formControlName="question" id="question" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required=""></textarea>
+                    </div>
+                    <div class="flex space-x-1">
+                        <div>
+                            <label for="a" class="block mb-2 text-sm font-medium text-gray-900 ">Option A</label>
+                            <input type="text" formControlName="a" id="a" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        </div>
+                        <div>
+                            <label for="b" class="block mb-2 text-sm font-medium text-gray-900">Option B</label>
+                            <input type="text" formControlName="b" id="b" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        </div>
+                    </div>
+                    <div class="flex space-x-1">
+                        <div>
+                            <label for="c" class="block mb-2 text-sm font-medium text-gray-900 ">Option C</label>
+                            <input type="text" formControlName="c" id="c" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        </div>
+                        <div>
+                            <label for="d" class="block mb-2 text-sm font-medium text-gray-900">Option D</label>
+                            <input type="text" formControlName="d" id="d" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        </div>
                     </div>
                     <div>
-                        <label for="team_name" class="block mb-2 text-sm font-medium text-gray-900">Team Name</label>
-                        <input type="text" formControlName="team_name" id="team_name" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        <label for="ans" class="block mb-2 text-sm font-medium text-gray-900">Correct Answer</label>
+                        <input type="text" formControlName="ans" id="ans" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
                     </div>
                     <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                        <input type="password" formControlName="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
-                    </div>
-                    <div>
-                        <label for="profile_pic" class="block mb-2 text-sm font-medium text-gray-900">Profile Picture</label>
-                        <!-- <input type="file" formControlName="profile_pic" id="profile_pic" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="" (change)="imgUpload($event)"> -->
-                        
+                        <label for="value" class="block mb-2 text-sm font-medium text-gray-900">Value</label>
+                        <input type="text" formControlName="value" id="value" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
                     </div>
 
                     <!-- BUTTON TO REGISTER THE TEAM -->
@@ -72,16 +87,54 @@
                         <th scope="col" class="px-6 py-3">
                             Answer
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Value
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <tr *ngFor="let team of teams" class="bg-white border-b">
+                    <tr *ngFor="let reward of rewards" class="bg-white border-b">
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                <strong>{{ team.team_password }}</strong>
+                                <strong>{{ rewards.indexOf(reward) + 1 }}.</strong>
                             </div>
                         </td>
-                    </tr> -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.question }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.a }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.b }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.c }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.d }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>{{ reward.ans }}</strong>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <strong>${{ reward.value }}</strong>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

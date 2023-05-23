@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/service/api/api.service';
 
@@ -9,9 +10,11 @@ import { ApiService } from 'src/app/service/api/api.service';
   styleUrls: ['./questions.component.css']
 })
 export class QuestionsComponent {
-  constructor(private api:ApiService, private tostr:ToastrService) {}
+  constructor(private api:ApiService, private tostr:ToastrService, private t:Title) {}
 
   ngOnInit(){
+    this.t.setTitle('Add Coding Questions | Techopoly')
+
     this.question_form.reset()
 
     this.question_form.patchValue({
