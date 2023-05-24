@@ -14,6 +14,9 @@ export class DashboardComponent {
 
   ngOnInit(){
     // console.log(this.br_refresh)
+
+    // FOLLOWING ARE THE CHANGES RELATED TO CODING QUESTIONS SECTION
+    // -----------------------------------------------------------
     this.code_output = {
       out1:'NONE',
       out2:'NONE',
@@ -21,6 +24,13 @@ export class DashboardComponent {
     }
     this.correct_answer = false
     this.current_question = {}
+    this.monaco_editor = false
+    this.codeModel = {
+      language: '',
+      uri: 'main.json',
+      value: 'Please delete this line before you start coding.'
+    };
+    // -----------------------------------------------------------
 
     // this.list[0] = this.team_position
     this.live_transaction = []
