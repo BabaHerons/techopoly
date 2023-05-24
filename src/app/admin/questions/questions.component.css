@@ -1,0 +1,4 @@
+.cell-custom {
+    @apply
+    overflow-y-auto h-[100px]
+}
