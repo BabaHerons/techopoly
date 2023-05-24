@@ -84,6 +84,9 @@ export class ApiService {
   }
 
   // ASSETS
+  assets_all_get(){
+    return this.http.get(this.base_url + '/assets')
+  }
   assets_box_id_get(box_id:any){
     return this.http.get(this.base_url + `/assets/${box_id}`)
   }

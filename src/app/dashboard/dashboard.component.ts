@@ -161,7 +161,7 @@ export class DashboardComponent {
           break;
         }
       }
-    },1000)
+    },2500)
 
 
     // if (sessionStorage.getItem('interval_time') === '1'){
@@ -198,7 +198,7 @@ export class DashboardComponent {
         this.live_transaction = []
         this.getting_live_transaction()
       },10000)
-      this.popovers()
+      this.populating_all_assets()
       this.br_refresh = false
     }
     
@@ -770,54 +770,182 @@ export class DashboardComponent {
     out3:'NONE'
   }
   correct_answer = false
+  all_assets:any = {}
 
-  mouse_hover(){
-    console.log('Hovered')
+  populating_all_assets(){
+    let k:any = {}
+    this.api.assets_all_get().subscribe(res => {
+      k = res
+      for (let i of k){
+        this.all_assets[i.box_index] = i
+      }
+      this.all_assets[4] = {box_index: '4', name:'Black Hole', desc:''}
+      this.all_assets[9] = {box_index: '9', name:'Black Hole', desc:''}
+      this.all_assets[13] = {box_index: '13', name:'Income Tax', desc:''}
+      this.all_assets[17] = {box_index: '17', name:'Treasury Box', desc:''}
+      this.all_assets[22] = {box_index: '22', name:'Black Hole', desc:''}
+      this.all_assets[26] = {box_index: '26', name:'Service Charge', desc:''}
+      this.all_assets[28] = {box_index: '28', name:'Black Hole', desc:''}
+      this.all_assets[29] = {box_index: '29', name:'Treasury Box', desc:''}
+      this.all_assets[33] = {box_index: '33', name:'Black Hole', desc:''}
+      this.all_assets[36] = {box_index: '36', name:'Jail', desc:''}
+      this.all_assets[40] = {box_index: '40', name:'Black Hole', desc:''}
+      this.all_assets[43] = {box_index: '43', name:'Treasury Box', desc:''}
+      this.all_assets[47] = {box_index: '47', name:'Black Hole', desc:''}
+      // console.log(this.all_assets)
+      this.popovers()
+    })
   }
+
   popovers(){
     for (let k=1; k<12; k++){
       if (k===1 || k===11){
         let row = document.getElementById(k.toString())
         let childs:any = row?.children
         for (let i=0; i < childs?.length; i++){
-          let div:any = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
-          <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
-              <h3 class="font-semibold text-gray-900">Popover title</h3>
-          </div>
-          <div class="px-3 py-2">
-              <p>And here's some amazing content. It's very engaging. Right?</p>
-          </div>
-          <div data-popper-arrow></div>
-                        </div>`
-          if (k === 11 && i === 0){}
-          else {
-            childs[i].setAttribute('data-popover-target', i+k*100)
-            // childs[i].setAttribute('onmouseover', 'mouse_hover($event)')
-            childs[i].innerHTML += div
+          if (k===1){
+            let div:any = ``
+            if(this.all_assets[i+k*10].rent_amount){
+              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[i+k*10].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${i+k*10}.png" alt="">
+                  <div class="flex justify-between mt-2">
+                    <p>Value: <span class="font-bold">$${this.all_assets[i+k*10].value}</span></p>
+                    <p>Rent: <span class="font-bold">$${this.all_assets[i+k*10].rent_amount}</span></p>
+                  </div>
+                  <div>
+                  <p>Question Level: <span class="font-bold">${this.all_assets[i+k*10].ques_level}</span></p>
+                  </div>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
+            else {
+              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[i+k*10].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${i+k*10}.png" alt="">
+                  <p>Description: <span class="font-semibold">${this.all_assets[i+k*10].desc}</span></p>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
+            
+          childs[i].setAttribute('data-popover-target', i+k*100)
+          // childs[i].setAttribute('onmouseover', 'mouse_hover($event)')
+          childs[i].innerHTML += div
+          }
+          if (k===11){
+            if (k === 11 && i === 0){}
+            else {
+              let div:any = ``
+              if(this.all_assets[52-i].rent_amount){
+                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+                <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                    <h3 class="font-semibold text-gray-900">${this.all_assets[52-i].name}</h3>
+                </div>
+                <div class="px-3 py-2">
+                    <img class="w-full h-full" src="/assets/box_img/${52-i}.png" alt="">
+                    <div class="flex justify-between mt-2">
+                      <p>Value: <span class="font-bold">$${this.all_assets[52-i].value}</span></p>
+                      <p>Rent: <span class="font-bold">$${this.all_assets[52-i].rent_amount}</span></p>
+                    </div>
+                    <div>
+                    <p>Question Level: <span class="font-bold">${this.all_assets[52-i].ques_level}</span></p>
+                    </div>
+                </div>
+                <div data-popper-arrow></div>
+                              </div>`
+              }
+              else {
+                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+                <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                    <h3 class="font-semibold text-gray-900">${this.all_assets[52-i].name}</h3>
+                </div>
+                <div class="px-3 py-2">
+                    <img class="w-full h-full" src="/assets/box_img/${52-i}.png" alt="">
+                    <p>Description: <span class="font-semibold">${this.all_assets[52-i].desc}</span></p>
+                </div>
+                <div data-popper-arrow></div>
+                              </div>`
+              }
+              childs[i].setAttribute('data-popover-target', i+k*100)
+              // childs[i].setAttribute('onmouseover', 'mouse_hover($event)')
+              childs[i].innerHTML += div
+            }
           }
         }
       }
       else if (1<k && k<11){
         let row = document.getElementById(k.toString())
         let childs:any = row?.children
-        let div_left:any = `<div data-popover id="${k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
-        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
-            <h3 class="font-semibold text-gray-900">Popover left</h3>
-        </div>
-        <div class="px-3 py-2">
-            <p>And here's some amazing content. It's very engaging. Right?</p>
-        </div>
-        <div data-popper-arrow></div>
-        </div>`
-        let div_right:any = `<div data-popover id="${k*100+1}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
-        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
-            <h3 class="font-semibold text-gray-900">Popover right</h3>
-        </div>
-        <div class="px-3 py-2">
-            <p>And here's some amazing content. It's very engaging. Right?</p>
-        </div>
-        <div data-popper-arrow></div>
-        </div>`
+        let div_left:any = ``
+            if(this.all_assets[11-k].rent_amount){
+              div_left = `<div data-popover id="${k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[11-k].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${11-k}.png" alt="">
+                  <div class="flex justify-between mt-2">
+                    <p>Value: <span class="font-bold">$${this.all_assets[11-k].value}</span></p>
+                    <p>Rent: <span class="font-bold">$${this.all_assets[11-k].rent_amount}</span></p>
+                  </div>
+                  <div>
+                  <p>Question Level: <span class="font-bold">${this.all_assets[11-k].ques_level}</span></p>
+                  </div>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
+            else {
+              div_left = `<div data-popover id="${k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[11-k].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${11-k}.png" alt="">
+                  <p>Description: <span class="font-semibold">${this.all_assets[11-k].desc}</span></p>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
+        let div_right:any = ``
+            if(this.all_assets[25+k].rent_amount){
+              div_right = `<div data-popover id="${k*100+1}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[25+k].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${25+k}.png" alt="">
+                  <div class="flex justify-between mt-2">
+                    <p>Value: <span class="font-bold">$${this.all_assets[25+k].value}</span></p>
+                    <p>Rent: <span class="font-bold">$${this.all_assets[25+k].rent_amount}</span></p>
+                  </div>
+                  <div>
+                  <p>Question Level: <span class="font-bold">${this.all_assets[25+k].ques_level}</span></p>
+                  </div>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
+            else {
+              div_right = `<div data-popover id="${k*100+1}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
+                  <h3 class="font-semibold text-gray-900">${this.all_assets[25+k].name}</h3>
+              </div>
+              <div class="px-3 py-2">
+                  <img class="w-full h-full" src="/assets/box_img/${25+k}.png" alt="">
+                  <p>Description: <span class="font-semibold">${this.all_assets[25+k].desc}</span></p>
+              </div>
+              <div data-popper-arrow></div>
+                            </div>`
+            }
 
         childs[0].setAttribute('data-popover-target', k*100)
         childs[0].setAttribute("data-popover-placement","left")
