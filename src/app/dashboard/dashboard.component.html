@@ -129,7 +129,7 @@
         <div id="2" class="flex">
             <div id="9000" class="cell bg-white">
                 <div [innerHTML]="list[9]"></div>
-                <img class="w-full h-full" src="/assets/box_img/4_Blackhole.png" alt="">
+                <img class="w-full h-full" src="/assets/box_img/9.png" alt="">
             </div>
             <div class="middle-empty-cell border-t-2"></div>
             <div id="27000" class="cell bg-lime-400">
@@ -561,7 +561,7 @@
     </div>
   </div>
 
-<!-- MODAL FOR BOX RELATED DETAILS UPON REACHING THEM -->
+<!-- MODAL FOR BOX RELATED DETAILS UPON REACHING THEM (ASSETS) -->
 <div id="box_modal" class="relative z-20 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
@@ -570,7 +570,7 @@
 
                 <!-- HEADER SECTION WHICH CONTAINS TEAM ID AND DISPLAY PICTURE -->
                 <div class="flex items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <img class="w-[5000px] h-[200px]" src="/assets/box_img/{{current_box.box_index}}.png">
+                    <img class="w-full h-full" src="/assets/box_img/{{current_box.box_index}}.png">
                     
                 </div>
 
@@ -591,7 +591,7 @@
 
                 <!-- CLOSE AND PURCHASE BUTTON -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_box_modal()">Close</button>
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_box_modal()" (click)="ngOnInit()">Close</button>
                     <button *ngIf="current_box.current_owner === 'admin' && correct_answer else rent_msg" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="purchase_property()" (click)="toggle_box_modal()">Purchase</button>
                     <div *ngIf="current_box.current_owner === 'admin' && !correct_answer" class="flex flex-row-reverse justify-between w-full">
                         <button type="button" class="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto" (click)="toggle_code_quest()">View Question</button>
@@ -619,6 +619,37 @@
     </div>
 </div>
 
+<!-- MODAL FOR NON-ASSET -->
+<div id="non_asset_modal" class="relative z-20 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+
+                <!-- HEADER SECTION WHICH CONTAINS TEAM ID AND DISPLAY PICTURE -->
+                <div class="flex items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <img class="w-full h-full" src="/assets/box_img/{{current_box.box_index}}.png">
+                    
+                </div>
+
+                <!-- MIDDLE PART i.e. DESCRIPTION ABOUT THE TEAM -->
+                <div *ngIf="'timeout' in current_box" class="flex flex-col px-4 py-3">
+                    <h2 class="font-semibold text-center mb-2 underline uppercase">{{current_box.name}}</h2>
+                    <div class="flex justify-around w-full">
+                        {{all_assets[current_box.box_index].desc}}
+                    </div>
+                </div>
+                <p *ngIf="current_box.name === 'Jail'" class="mt-4 capitalize font-semibold text-red-700 px-4 py-3">You need to wait 300 seconds before you can roll the dice. <br> If you wish to skip the wait time, click on 'Skip Jail Timer' button to continue in the game. But then you have to pay the Jail Charges.</p>
+                <p *ngIf="t_box_msg" class="mt-4 capitalize font-semibold text-blue-700 px-4 py-3">{{t_box_msg}}</p>
+                <!-- CLOSE AND PURCHASE BUTTON -->
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_non_asset()" (click)="ngOnInit()">Close</button>
+                    <button *ngIf="current_box.name === 'Jail'" type="button" class="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 sm:ml-3 sm:w-auto" (click)="pass_jail_timer()" (click)="toggle_non_asset()" (click)="ngOnInit()">Skip Jail Timer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- MODAL FOR SOLVING QUESTIONS FOR PROPERTY PURCHASE -->
 <div id="code_question" class="relative z-30 hidden">

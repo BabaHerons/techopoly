@@ -94,6 +94,17 @@ export class ApiService {
     return this.http.get(this.base_url + `/assets/team/${team_id}`)
   }
 
+  // NON-ASSETS
+  non_assets_all_get(){
+    return this.http.get(this.base_url + '/nonassets')
+  }
+  non_assets_box_index_get(box_index:any){
+    return this.http.get(this.base_url + `/nonassets/${box_index}`)
+  }
+  non_assets_treasury_timeout_put(box_index:any, data:any){
+    return this.http.put(this.base_url + `/nonassets/${box_index}`, data, {'headers':this.headers})
+  }
+
   // PENALTY
   penalty_all_get(){
     return this.http.get(this.base_url + '/penalty')

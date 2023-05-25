@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../service/api/api.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,12 @@ export class DashboardComponent {
 
   ngOnInit(){
     // console.log(this.br_refresh)
+    let now = new Date().getTime();
+    setTimeout(() => {
+      let new_now = new Date().getTime()
+      console.log(new_now - now)
+      console.log(typeof(new_now))
+    }, 10000);
 
     // FOLLOWING ARE THE CHANGES RELATED TO CODING QUESTIONS SECTION
     // -----------------------------------------------------------
@@ -225,6 +232,7 @@ export class DashboardComponent {
   total_team:number = 0
   current_box:any = {}
   current_question:any = {}
+  t_box_msg:any = ""
 
   startTimer() {
     let btnDice = document.getElementById('btnDice')
@@ -398,9 +406,105 @@ export class DashboardComponent {
         this.current_box = m
 
         // CHECKING IF THE CURRENT BOX BELONGS TO A PROPERTY OR NOT
+        // FOR NON ASSET
         if ("message" in m){
-          console.log(m.message)
+          // console.log(m.message)
+          this.toggle_non_asset();
+          this.api.non_assets_box_index_get(this.team_current_position_value).subscribe(res => {
+            let n:any = {}
+            n = res
+            this.current_box = n
+
+            // INCOME TAX
+            if (this.current_box.name === 'Income Tax'){
+              let data = {
+                "assets":"NONE",
+                "gain":"false",
+                "loss":"true",
+                "amount":Math.floor(Number(this.current_box.value)*Number(this.my_details.cash)),
+                "message": `Income Tax paid`
+              }
+              this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                let l:any = {}
+                l = res
+                if (l.amount === Math.floor(Number(this.current_box.value)*Number(this.my_details.cash)) && l.loss === 'true'){
+                  this.tostr.warning(`$${l.amount} has been deducted from your wallet.`, 'Income Tax Paid')
+                }
+              })
+            }
+
+            // SERVICE CHARGE
+            else if (this.current_box.name === 'Service Charge'){
+              let data = {
+                "assets":"NONE",
+                "gain":"false",
+                "loss":"true",
+                "amount":Math.floor(Number(this.current_box.value)*Number(this.my_details.cash)),
+                "message": `Service Charge paid`
+              }
+              this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                let l:any = {}
+                l = res
+                if (l.amount === Math.floor(Number(this.current_box.value)*Number(this.my_details.cash)) && l.loss === 'true'){
+                  this.tostr.warning(`$${l.amount} has been deducted from your wallet.`, 'Service Charge Paid')
+                }
+              })
+            }
+
+            // JAIL
+            else if (this.current_box.name === 'Jail'){
+              this.waitCount += 180
+            }
+
+            // TREASURY BOX
+            else if (this.current_box.name === 'Treasury Box'){
+              let now = new Date().getTime()
+              if (this.current_box.timeout != 'false'){
+                if ((now - Number(this.current_box.timeout)) > 600000){
+                  let data = {
+                    "assets":"NONE",
+                    "gain":"true",
+                    "loss":"false",
+                    "amount":this.current_box.value,
+                    "message": `Treasury Box Opened`
+                  }
+                  this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                    let l:any = {}
+                    l = res
+                    if (l.amount === this.current_box.value && l.gain === 'true'){
+                      this.tostr.success(`$${l.amount} has been added to your wallet.`, 'Treasury Box')
+                    }
+                    this.api.non_assets_treasury_timeout_put(this.current_box.box_index,{"timeout": now}).subscribe(res => {})
+                  })
+                }
+                else {
+                  let rem_time = (now - Number(this.current_box.timeout))/1000
+                  this.t_box_msg = `This treasury box has been opened recently. And it will be available after ${rem_time} seconds.`
+                }
+              }
+              else {
+                let data = {
+                  "assets":"NONE",
+                  "gain":"true",
+                  "loss":"false",
+                  "amount":this.current_box.value,
+                  "message": `Treasury Box Opened`
+                }
+                this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                  let l:any = {}
+                  l = res
+                  if (l.amount === this.current_box.value && l.gain === 'true'){
+                    this.tostr.success(`$${l.amount} has been added to your wallet.`, 'Treasury Box')
+                  }
+                  this.api.non_assets_treasury_timeout_put(this.current_box.box_index,{"timeout": now}).subscribe(res => {})
+                })
+              }
+            }
+          })
         }
+
+
+        // FOR ASSETS
         else {
           this.toggle_box_modal()
           if(this.current_box.current_owner != this.my_details.team_id && this.current_box.current_owner != 'admin'){
@@ -463,11 +567,32 @@ export class DashboardComponent {
 
   }
 
+  pass_jail_timer(){
+    this.waitCount = 0
+    let data = {
+      "assets":"NONE",
+      "gain":"false",
+      "loss":"true",
+      "amount":Number(this.current_box.value),
+      "message": `Jail Charges paid`
+    }
+    this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+      let l:any = {}
+      l = res
+      if (l.amount === Number(this.current_box.value) && l.loss === 'true'){
+        this.tostr.warning(`$${l.amount} has beend deducted from your wallet.`, 'Jail Charges')
+      }
+    })
+  }
+
   toggle_box_modal(){
     let box_modal = document.getElementById('box_modal')
     box_modal?.classList.toggle('hidden')
+  }
 
-    this.ngOnInit()
+  toggle_non_asset(){
+    let non_asset = document.getElementById('non_asset_modal')
+    non_asset?.classList.toggle('hidden')
   }
 
   purchase_property() {
@@ -806,7 +931,7 @@ export class DashboardComponent {
           if (k===1){
             let div:any = ``
             if(this.all_assets[i+k*10].rent_amount){
-              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-[11] invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
               <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
                   <h3 class="font-semibold text-gray-900">${this.all_assets[i+k*10].name}</h3>
               </div>
@@ -824,7 +949,7 @@ export class DashboardComponent {
                             </div>`
             }
             else {
-              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+              div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-[11] invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
               <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
                   <h3 class="font-semibold text-gray-900">${this.all_assets[i+k*10].name}</h3>
               </div>
@@ -845,7 +970,7 @@ export class DashboardComponent {
             else {
               let div:any = ``
               if(this.all_assets[52-i].rent_amount){
-                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-[11] invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
                 <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
                     <h3 class="font-semibold text-gray-900">${this.all_assets[52-i].name}</h3>
                 </div>
@@ -863,7 +988,7 @@ export class DashboardComponent {
                               </div>`
               }
               else {
-                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+                div = `<div data-popover id="${i+k*100}" role="tooltip" class="absolute z-[11] invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
                 <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg">
                     <h3 class="font-semibold text-gray-900">${this.all_assets[52-i].name}</h3>
                 </div>
