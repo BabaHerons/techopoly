@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../service/api/api.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { timeout } from 'rxjs';
 
 @Component({
@@ -15,12 +15,17 @@ export class DashboardComponent {
 
   ngOnInit(){
     // console.log(this.br_refresh)
-    let now = new Date().getTime();
-    setTimeout(() => {
-      let new_now = new Date().getTime()
-      console.log(new_now - now)
-      console.log(typeof(new_now))
-    }, 10000);
+    // let now = new Date().getTime();
+    // setTimeout(() => {
+    //   let new_now = new Date().getTime()
+    //   console.log(new_now - now)
+    //   console.log(typeof(new_now))
+    // }, 10000);
+
+    this.reward_form.reset();
+    this.reward_form.patchValue({
+      option:'Choose an option'
+    })
 
     // FOLLOWING ARE THE CHANGES RELATED TO CODING QUESTIONS SECTION
     // -----------------------------------------------------------
@@ -233,6 +238,9 @@ export class DashboardComponent {
   current_box:any = {}
   current_question:any = {}
   t_box_msg:any = ""
+  random_penalty:any = ""
+  random_reward:any = ""
+  
 
   startTimer() {
     let btnDice = document.getElementById('btnDice')
@@ -500,6 +508,64 @@ export class DashboardComponent {
                 })
               }
             }
+
+            // BLACK HOLE
+            else if (this.current_box.name === 'Black Hole'){
+              let n:Number = 0
+              function randomIntFromInterval(min:any, max:any) { // min and max included 
+                return Math.floor(Math.random() * (max - min + 1) + min)
+              }
+              n = randomIntFromInterval(1, 3)
+              
+              // GO TO JAIL
+              if (n===1){
+                if (this.team_current_position_value < 36){
+                  this.outcome = 36 - this.team_current_position_value
+                }
+                else {
+                  this.outcome = (52 - this.team_current_position_value) + 36
+                }
+                this.api_calls();
+              }
+
+              // RANDOM REWARD WITH OR WITHOUGHT QUESTION
+              else if (n===2){
+                this.api.rewards_team_id_get(this.my_details.team_id).subscribe(res => {
+                  this.random_reward = res
+                  this.random_reward.options = []
+
+                  if (this.random_reward.a === this.random_reward.b === this.random_reward.c === this.random_reward.d === this.random_reward.ans){
+                    this.random_reward.options = 'NONE'
+                    const data = {
+                      "amount":this.random_reward.value,
+                      "gain":'true',
+                      "loss":'false',
+                      "assets":'NONE',
+                      "message":"Cash reward from Black Hole"
+                    }
+                    this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                      this.tostr.success(`$${this.random_reward.value} has been added to your wallet`)
+                    })
+                  }
+                })
+              }
+
+              // RANDOM PENALTY
+              else if (n===3){
+                this.api.penalty_random_get().subscribe(res => {
+                  this.random_penalty = res
+
+                  const data = {
+                    "amount":this.random_penalty.value,
+                    "gain":'false',
+                    "loss":'true',
+                    "assets":'NONE',
+                    "message":"Penalty charge from Black Hole"
+                  }
+                  this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => this.tostr.warning(`$${this.random_penalty.value} has been deducted as penalty`))
+                })
+              }
+            }
           })
         }
 
@@ -567,22 +633,48 @@ export class DashboardComponent {
 
   }
 
-  pass_jail_timer(){
-    this.waitCount = 0
-    let data = {
-      "assets":"NONE",
-      "gain":"false",
-      "loss":"true",
-      "amount":Number(this.current_box.value),
-      "message": `Jail Charges paid`
-    }
-    this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
-      let l:any = {}
-      l = res
-      if (l.amount === Number(this.current_box.value) && l.loss === 'true'){
-        this.tostr.warning(`$${l.amount} has beend deducted from your wallet.`, 'Jail Charges')
+  reward_form = new FormGroup({
+    option: new FormControl("", Validators.required)
+  })
+  submit_reward_mcq(){
+    if (this.reward_form.controls['option'].value === this.random_reward.ans){
+      const data = {
+        "amount":this.random_reward.value,
+        "gain":'true',
+        "loss":'false',
+        "assets":'NONE',
+        "message":"Cash reward from Black Hole"
       }
-    })
+      this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+        this.tostr.success(`$${this.random_reward.value} has been added to your wallet`)
+      })
+    } else {
+      this.tostr.error('Please continue to roll the dice', 'Wrong Answer')
+    }
+  }
+
+  pass_jail_timer(){
+    if (Number(this.my_details.cash) >= 50000){
+      this.waitCount = 0
+      let data = {
+        "assets":"NONE",
+        "gain":"false",
+        "loss":"true",
+        "amount":Number(this.current_box.value),
+        "message": `Jail Charges paid`
+      }
+      this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+        let l:any = {}
+        l = res
+        if (l.amount === Number(this.current_box.value) && l.loss === 'true'){
+          this.tostr.warning(`$${l.amount} has beend deducted from your wallet.`, 'Jail Charges')
+        }
+      })
+    }
+    else {
+      this.tostr.warning("Please wait 3 minutes", "Insufficient Cash")
+    }
+    
   }
 
   toggle_box_modal(){
@@ -686,19 +778,29 @@ export class DashboardComponent {
       else {
         this.tostr.error("Unable to add money to wallet")
       }
+
+      // REMOVING THE PROPERTY FROM THE USER
+      this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+        let k:any = {}
+        k = res
+        if (String(k.assets) === String(data.assets) && k.amount === data.amount){
+          this.tostr.success("Property Sold")
+        }
+        else {
+          this.tostr.error("Unable to sell the property")
+        }
+      },
+      error => {
+        console.log('error', error)
+        this.tostr.error(error.statusText, 'Server Error')
+      })
+    },
+    error => {
+      console.log('error', error)
+      this.tostr.error(error.statusText, 'Server Error')
     })
 
-    // REMOVING THE PROPERTY FROM THE USER
-    this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
-      let k:any = {}
-      k = res
-      if (String(k.assets) === String(data.assets) && k.amount === data.amount){
-        this.tostr.success("Property Sold")
-      }
-      else {
-        this.tostr.error("Unable to sell the property")
-      }
-    })
+    
 
     if (this.isDisabled){
       if (this.waitCount === 0){
@@ -712,7 +814,9 @@ export class DashboardComponent {
       }
     }
 
-    this.ngOnInit();
+    setTimeout(() => {
+      this.ngOnInit();
+    }, 1500);
   }
 
   toggle_portfolio = () => {
@@ -895,28 +999,34 @@ export class DashboardComponent {
     out3:'NONE'
   }
   correct_answer = false
-  all_assets:any = {}
+  all_assets:any = {0:{desc:''}}
 
   populating_all_assets(){
+    this.all_assets = {}
     let k:any = {}
     this.api.assets_all_get().subscribe(res => {
       k = res
       for (let i of k){
         this.all_assets[i.box_index] = i
       }
-      this.all_assets[4] = {box_index: '4', name:'Black Hole', desc:''}
-      this.all_assets[9] = {box_index: '9', name:'Black Hole', desc:''}
-      this.all_assets[13] = {box_index: '13', name:'Income Tax', desc:''}
-      this.all_assets[17] = {box_index: '17', name:'Treasury Box', desc:''}
-      this.all_assets[22] = {box_index: '22', name:'Black Hole', desc:''}
-      this.all_assets[26] = {box_index: '26', name:'Service Charge', desc:''}
-      this.all_assets[28] = {box_index: '28', name:'Black Hole', desc:''}
-      this.all_assets[29] = {box_index: '29', name:'Treasury Box', desc:''}
-      this.all_assets[33] = {box_index: '33', name:'Black Hole', desc:''}
-      this.all_assets[36] = {box_index: '36', name:'Jail', desc:''}
-      this.all_assets[40] = {box_index: '40', name:'Black Hole', desc:''}
-      this.all_assets[43] = {box_index: '43', name:'Treasury Box', desc:''}
-      this.all_assets[47] = {box_index: '47', name:'Black Hole', desc:''}
+      let bh = `Embark on a thrilling cosmic odyssey through the enigmatic blackhole's realm. Seek exciting rewards by answering questions, but beware the unexpected penalties that demand payment, as you navigate this extraordinary stellar terrain.`
+      let tbox = `Uncover the treasury box, a block of pure fun and glee. When you land upon it, a cash reward is yours to see. Yet, with a playful twist, you must exercise your patience, for another treasure box can't be claimed for ten minutes' duration.`
+      let it = `The income tax block appears, taking 10% of your cash. Watch your wallet shrink, a sly little knock, a playful twist in this taxing game walk.`
+      let sc = `Step into the service charge block, where a tiny toll takes a mock. Give up 2% of your wallet's stash, a playful twist that adds to the game's bash.`
+      let Jail = `Caught in the clutches of JAIL's domain, two outcomes await, causing joy or disdain. Be surprised by the blackhole's enchanting sway, or endure three minutes, stuck in jail, before you can play.`
+      this.all_assets[4] = {box_index: '4', name:'Black Hole', desc:bh}
+      this.all_assets[9] = {box_index: '9', name:'Treasury Box', desc:tbox}
+      this.all_assets[13] = {box_index: '13', name:'Income Tax', desc:it}
+      this.all_assets[17] = {box_index: '17', name:'Treasury Box', desc:tbox}
+      this.all_assets[22] = {box_index: '22', name:'Black Hole', desc:bh}
+      this.all_assets[26] = {box_index: '26', name:'Service Charge', desc:sc}
+      this.all_assets[28] = {box_index: '28', name:'Black Hole', desc:bh}
+      this.all_assets[29] = {box_index: '29', name:'Treasury Box', desc:tbox}
+      this.all_assets[33] = {box_index: '33', name:'Black Hole', desc:bh}
+      this.all_assets[36] = {box_index: '36', name:'Jail', desc:Jail}
+      this.all_assets[40] = {box_index: '40', name:'Black Hole', desc:bh}
+      this.all_assets[43] = {box_index: '43', name:'Treasury Box', desc:tbox}
+      this.all_assets[47] = {box_index: '47', name:'Black Hole', desc:bh}
       // console.log(this.all_assets)
       this.popovers()
     })

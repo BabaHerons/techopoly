@@ -112,7 +112,7 @@ export class ApiService {
   penalty_post(data:any){
     return this.http.post(this.base_url + '/penalty', data, {'headers':this.headers})
   }
-  penalty_random_get(data:any){
+  penalty_random_get(){
     return this.http.get(this.base_url + '/penalty/random')
   }
 
