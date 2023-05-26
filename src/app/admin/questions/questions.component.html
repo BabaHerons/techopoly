@@ -106,6 +106,9 @@
                         <th scope="col" class="px-6 py-3">
                             Level
                         </th>
+                        <!-- <th scope="col" class="px-6 py-3">
+                            Action
+                        </th> -->
                         
                     </tr>
                 </thead>
@@ -150,13 +153,93 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <strong class="cell-custom">{{ ques.level }}</strong>
+                            <div class="flex">
+                                <strong class="mr-4">{{ ques.level }}</strong>
+                                <a type="button" class=" cursor-pointer font-medium text-blue-600 hover:underline" (click)="toggle_edit_modal()" (click)="get_question(ques.id)">Edit</a>
                             </div>
                         </td>
+                        <!-- <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <a type="button" class="cell-custom cursor-pointer font-medium text-blue-600 hover:underline" (click)="toggle_edit_modal()" (click)="get_question(ques.id)">Edit</a>
+                            </div>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </section>
+
+
+
+<!-- Edit user modal -->
+<div id="editUserModal" class="fixed hidden flex bg-gray-500 bg-opacity-75 transition-opacity top-0 left-0 right-0 z-50 items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full w-full">
+    <!-- Modal body -->
+    <div class="flex justify-center items-center my-4 space-y-6 w-full h-full">
+        <!-- EDITING CODING QUESTIONS -->
+        <div class="w-full bg-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <div class="w-full flex justify-between">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+                        Edit Coding Questions
+                    </h1>
+                    <button type="button" (click)="toggle_edit_modal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editUserModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <form class="space-y-4 md:space-y-6" [formGroup]="edit_question_form">
+                    <div>
+                        <label class="block mb-4 text-lg text-black font-bold">Question: {{current_edit_question.sn + 1}}</label>
+                    </div>
+                    <div>
+                        <label for="question" class="block mb-2 text-sm font-medium text-gray-900">Question</label>
+                        <input type="file" formControlName="question" id="question" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="" (change)="img_upload($event)">
+                    </div>
+                    <div class="flex space-x-1">
+                        <div>
+                            <label for="test_case1" class="block mb-2 text-sm font-medium text-gray-900 ">Test Case 1</label>
+                            <input type="text" formControlName="test_case1" id="test_case1" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        </div>
+                        <div>
+                            <label for="out1" class="block mb-2 text-sm font-medium text-gray-900">Expected Output 1</label>
+                            <input type="text" formControlName="out1" id="out1" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        </div>
+                    </div>
+                    <div class="flex space-x-1">
+                        <div>
+                            <label for="test_case2" class="block mb-2 text-sm font-medium text-gray-900 ">Test Case 2</label>
+                            <input type="text" formControlName="test_case2" id="test_case2" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        </div>
+                        <div>
+                            <label for="out2" class="block mb-2 text-sm font-medium text-gray-900">Expected Output 2</label>
+                            <input type="text" formControlName="out2" id="out2" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        </div>
+                    </div>
+                    <div class="flex space-x-1">
+                        <div>
+                            <label for="test_case3" class="block mb-2 text-sm font-medium text-gray-900 ">Test Case 3</label>
+                            <input type="text" formControlName="test_case3" id="test_case3" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5    placeholder-gray-400    focus:ring-blue-500  focus:border-blue-500" placeholder="example: 45SSCGH5k" required="">
+                        </div>
+                        <div>
+                            <label for="out3" class="block mb-2 text-sm font-medium text-gray-900">Expected Output 3</label>
+                            <input type="text" formControlName="out3" id="out3" placeholder="example: Royal Lions" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400  focus:ring-blue-500  focus:border-blue-500" required="">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="level" class="block mb-2 text-sm font-medium text-gray-900">Level of the Question</label>
+                        <select id="level" formControlName="level"
+                        class="p-2 rounded-lg">
+                        <option selected disabled>Select</option>
+                        <option value="easy">Easy</option>
+                        <option value="med">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                    </div>
+
+                    <!-- BUTTON TO REGISTER THE TEAM -->
+                    <button type="button" class="bg-black text-white w-full focus:ring-4 focus:outline-none focus:ring-white font-medium rounded-lg text-sm px-5 py-2.5 text-center  bg-primary-600  hover:bg-gray-800  focus:ring-primary-800" (click)="toggle_edit_modal()" (click)="update_question()">Commit Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

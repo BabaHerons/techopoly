@@ -863,13 +863,13 @@ export class DashboardComponent {
             this.correct_answer = true
             
             // API CALLING FOR UPDATING THE SOLVED QUESTIONS IN TEAM STATUS.CODING_QUES
-            // this.api.status_id_coding_ques_update_put(this.my_details.team_id, {"coding_ques": this.current_question.id}).subscribe(res => {
-            //   let z:any = {}
-            //   z = res
-            //   if (z.team_id === this.my_details.team_id){
-            //     this.tostr.success('Correct Answer')
-            //   }
-            // })
+            this.api.status_id_coding_ques_update_put(this.my_details.team_id, {"coding_ques": this.current_question.id}).subscribe(res => {
+              let z:any = {}
+              z = res
+              if (z.team_id === this.my_details.team_id){
+                this.tostr.success('Correct Answer')
+              }
+            })
           }
         },
         error => {

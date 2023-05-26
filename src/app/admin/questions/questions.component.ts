@@ -45,6 +45,22 @@ export class QuestionsComponent {
     out3: new FormControl('', Validators.required),
     level: new FormControl('', Validators.required)
   })
+  
+  edit_question_form = new FormGroup({
+    test_case1: new FormControl('', Validators.required),
+    test_case2: new FormControl('', Validators.required),
+    test_case3: new FormControl('', Validators.required),
+    out1: new FormControl('', Validators.required),
+    out2: new FormControl('', Validators.required),
+    out3: new FormControl('', Validators.required),
+    level: new FormControl('', Validators.required),
+    question: new FormControl('', Validators.required),
+  })
+
+  toggle_edit_modal(){
+    let ele = document.getElementById('editUserModal')
+    ele?.classList.toggle('hidden')
+  }
 
   question_image:FormData = new FormData()
   img_upload(e:Event){
@@ -100,5 +116,64 @@ export class QuestionsComponent {
       })
       this.ngOnInit();
     }
+  }
+
+  current_edit_question:any = {}
+  get_question(id:any){
+    for (let ques of this.questions){
+      if (Number(ques.id)===Number(id)){
+        this.current_edit_question = ques
+        this.current_edit_question.sn = this.questions.indexOf(ques)
+        break
+      }
+    }
+
+    this.edit_question_form.patchValue({
+      test_case1:this.current_edit_question.test_case1,
+      test_case2:this.current_edit_question.test_case2,
+      test_case3:this.current_edit_question.test_case3,
+      out1:this.current_edit_question.out1,
+      out2:this.current_edit_question.out2,
+      out3:this.current_edit_question.out3,
+      level:this.current_edit_question.level
+    })
+  }
+
+  update_question(){
+    let data:any = {
+      test_case1:this.edit_question_form.controls['test_case1'].value,
+      test_case2:this.edit_question_form.controls['test_case2'].value,
+      test_case3:this.edit_question_form.controls['test_case3'].value,
+      out1:this.edit_question_form.controls['out1'].value,
+      out2:this.edit_question_form.controls['out2'].value,
+      out3:this.edit_question_form.controls['out3'].value,
+      level:this.edit_question_form.controls['level'].value
+    }
+
+    this.api.question_edit_id(this.current_edit_question.id, data).subscribe(res => {
+      let k:any = {}
+      k = res
+      this.tostr.success('Edit successfull')
+
+      // ADDING QUESTION'S IMAGE
+      if (!this.edit_question_form.controls['question'].invalid){
+        this.api.question_image_put(k.id, this.question_image).subscribe((res) => {
+          k = res;
+          if (k.message.includes('Upload successfull')) {
+            this.tostr.success('Question Image uploaded.');
+          }
+        },
+        (error) => {
+          console.log('error', error);
+          this.tostr.error(error.statusText, 'Server Error');
+        })
+      }
+    },
+    (error) => {
+      console.log('error', error);
+      this.tostr.error(error.statusText, 'Server Error');
+    })
+
+    this.ngOnInit();
   }
 }

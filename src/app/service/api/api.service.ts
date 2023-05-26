@@ -8,9 +8,9 @@ export class ApiService {
 
   constructor(private http:HttpClient) {}
   // private base_url = 'http://127.0.0.1:5000'
-  // private base_url = 'http://192.168.29.61:5000'
+  private base_url = 'http://192.168.29.61:5000'
   // private base_url = 'https://techopoly.babaherons.in/api'
-  private base_url = 'https://techopoly-api.azurewebsites.net'
+  // private base_url = 'https://techopoly-api.azurewebsites.net'
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' })
   private code_header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
   
@@ -142,6 +142,9 @@ export class ApiService {
   }
   question_random_team_id_get(team_id:any, level:any){
     return this.http.get(this.base_url + `/questions/teams/${team_id}/${level}`)
+  }
+  question_edit_id(id:any, data:any){
+    return this.http.put(this.base_url + `/questions/edit/${id}`, data, {'headers':this.headers})
   }
 
   // FOR GETTING OUTPUT FROM USER CODE
