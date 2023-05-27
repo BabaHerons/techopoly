@@ -654,7 +654,7 @@ export class DashboardComponent {
   }
 
   pass_jail_timer(){
-    if (Number(this.my_details.cash) >= 50000){
+    if (Number(this.my_details.cash) >= 1500){
       this.waitCount = 0
       let data = {
         "assets":"NONE",
