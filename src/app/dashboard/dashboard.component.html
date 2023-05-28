@@ -639,20 +639,20 @@
                         {{all_assets[current_box.box_index].desc}}
                     </div>
                 </div>
-                <p *ngIf="current_box.name === 'Jail'" class="mt-4 capitalize font-semibold text-red-700 px-4 py-3">You need to wait 300 seconds before you can roll the dice. <br> If you wish to skip the wait time, click on 'Skip Jail Timer' button to continue in the game. But then you have to pay <strong>$50,000</strong> Jail Charges.</p>
+                <p *ngIf="current_box.name === 'Jail'" class="mt-4 capitalize font-semibold text-red-700 px-4 py-3">You need to wait 300 seconds before you can roll the dice. <br> If you wish to skip the wait time, click on 'Skip Jail Timer' button to continue in the game. But then you have to pay <strong>$1500</strong> Jail Charges.</p>
                 <p *ngIf="t_box_msg" class="mt-4 capitalize font-semibold text-blue-700 px-4 py-3">{{t_box_msg}}</p>
+                <div *ngIf="random_penalty">
+                    <p class="mt-4 capitalize font-semibold text-red-700 px-4 py-3"> {{random_penalty.statement}}</p>
+                </div>
                 <div *ngIf="current_box.name === 'Black Hole'">
-                    <div *ngIf="random_penalty">
-                        <p class="mt-4 capitalize font-semibold text-red-700 px-4 py-3"> {{random_penalty.statement}}</p>
-                    </div>
                     <div *ngIf="random_reward.options === 'NONE'">
                         <p class="mt-4 capitalize font-semibold text-red-700 px-4 py-3"> ${{random_reward.value}} will be awarded to you as {{random_reward.question}}</p>
                     </div>
-                    <div *ngIf="random_reward.options != 'NONE'" class="flex flex-col">
+                    <div *ngIf="random_reward.options === 'reward_question'" class="flex flex-col">
                         <p class="text-center font-semibold">You need to solve this question to get the reward.</p>
-                        <form class="p-4">
+                        <form class="p-4" [formGroup]="reward_form">
                             <span class="font-semibold underline">Question:</span>
-                            <p> This is the first questiong lor</p>
+                            <p> {{random_reward.question}} </p>
                             <p class="font-semibold underline mt-4">Options:</p>
                             <select id="option" formControlName="option" class="p-1 rounded-lg">
                                 <option selected disabled>Choose an option</option>
@@ -663,12 +663,15 @@
                             </select>
                         </form>
                     </div>
+                    <div *ngIf="random_reward.options === 'Jail'">
+                        <p class="mt-4 capitalize font-semibold text-red-700 px-4 py-3 text-center">You will be sent to Jail now.</p>
+                    </div>
                 </div>
                 <!-- CLOSE AND PURCHASE BUTTON -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" (click)="toggle_non_asset()" (click)="ngOnInit()">Close</button>
                     <button *ngIf="current_box.name === 'Jail'" type="button" class="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 sm:ml-3 sm:w-auto" (click)="pass_jail_timer()" (click)="toggle_non_asset()" (click)="ngOnInit()">Skip Jail Timer</button>
-                    <button *ngIf="random_reward.options != 'NONE' && current_box.name === 'Black Hole'" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="submit_reward_mcq()" (click)="toggle_non_asset()" (click)="ngOnInit()">Submit</button>
+                    <button *ngIf="random_reward.options === 'reward_question' && current_box.name === 'Black Hole'" type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto" (click)="submit_reward_mcq()" (click)="toggle_non_asset()" (click)="ngOnInit()">Submit</button>
                 </div>
             </div>
         </div>

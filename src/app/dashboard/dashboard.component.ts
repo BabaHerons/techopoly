@@ -26,6 +26,9 @@ export class DashboardComponent {
     this.reward_form.patchValue({
       option:'Choose an option'
     })
+    this.random_reward = []
+    this.random_penalty = []
+    this.t_box_msg = []
 
     // FOLLOWING ARE THE CHANGES RELATED TO CODING QUESTIONS SECTION
     // -----------------------------------------------------------
@@ -512,10 +515,10 @@ export class DashboardComponent {
             // BLACK HOLE
             else if (this.current_box.name === 'Black Hole'){
               let n:Number = 0
-              function randomIntFromInterval(min:any, max:any) { // min and max included 
-                return Math.floor(Math.random() * (max - min + 1) + min)
-              }
-              n = randomIntFromInterval(1, 3)
+              // function randomIntFromInterval(min:any, max:any) { // min and max included 
+              //   return Math.floor(Math.random() * (max - min + 1) + min)
+              // }
+              n = this.randomIntFromInterval(1, 3)
               
               // GO TO JAIL
               if (n===1){
@@ -525,14 +528,18 @@ export class DashboardComponent {
                 else {
                   this.outcome = (52 - this.team_current_position_value) + 36
                 }
-                this.api_calls();
+                this.random_reward.options = 'Jail'
+                this.ngOnInit();
+                setTimeout(() => {
+                  this.api_calls();
+                }, 2500);
               }
 
               // RANDOM REWARD WITH OR WITHOUGHT QUESTION
               else if (n===2){
                 this.api.rewards_team_id_get(this.my_details.team_id).subscribe(res => {
                   this.random_reward = res
-                  this.random_reward.options = []
+                  this.random_reward.options = 'reward_question'
 
                   if (this.random_reward.a === this.random_reward.b === this.random_reward.c === this.random_reward.d === this.random_reward.ans){
                     this.random_reward.options = 'NONE'
@@ -544,7 +551,7 @@ export class DashboardComponent {
                       "message":"Cash reward from Black Hole"
                     }
                     this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
-                      this.tostr.success(`$${this.random_reward.value} has been added to your wallet`)
+                      this.tostr.success(`$${this.random_reward.value} has been added to your wallet`, 'Correct Answer')
                     })
                   }
                 })
@@ -562,7 +569,9 @@ export class DashboardComponent {
                     "assets":'NONE',
                     "message":"Penalty charge from Black Hole"
                   }
-                  this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => this.tostr.warning(`$${this.random_penalty.value} has been deducted as penalty`))
+                  this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
+                    this.tostr.warning(`$${this.random_penalty.value} has been deducted as penalty`)
+                  })
                 })
               }
             }
@@ -602,7 +611,6 @@ export class DashboardComponent {
             let z:any = {}
             this.api.transactions_team_id_post(this.current_box.current_owner, data_).subscribe(res => {
               z = res
-
             })
           }
         }
@@ -646,7 +654,7 @@ export class DashboardComponent {
         "message":"Cash reward from Black Hole"
       }
       this.api.transactions_team_id_post(this.my_details.team_id, data).subscribe(res => {
-        this.tostr.success(`$${this.random_reward.value} has been added to your wallet`)
+        this.tostr.success(`Correct Answer`)
       })
     } else {
       this.tostr.error('Please continue to roll the dice', 'Wrong Answer')
